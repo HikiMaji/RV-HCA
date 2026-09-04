@@ -1,0 +1,78 @@
+{
+  "config": {
+    "aggregate_mode": "mean_probe",
+    "association_gate_m": 4.0,
+    "detector_cache_path": "data/intermediate/detections/opv2v_point_pillar_sinbevt_test_gtfree.pkl",
+    "detector_source_model": "point_pillar_sinbevt",
+    "frame_period_s": 0.1,
+    "horizons_s": [
+      0.1,
+      0.3,
+      0.5,
+      1.0,
+      2.0,
+      3.0,
+      5.0
+    ],
+    "min_score": 0.25,
+    "peer_delay_s": 0.1,
+    "primary_error_definition": "2D XY Euclidean distance; 3D fields are supplemental",
+    "target_gate_m": 4.0,
+    "target_max_miss": 2,
+    "tracking_frame": "world_fixed"
+  },
+  "schema_version": "rvhca.cpu_replay.v1",
+  "summary": {
+    "association_events": 19181,
+    "common_events": 7173,
+    "harm_rate_eps_0.1m": 0.294253887724716,
+    "horizon_coverage": {
+      "0.100": {
+        "coverage": 1.0,
+        "matured_rows": 7173,
+        "rows": 7173
+      },
+      "0.300": {
+        "coverage": 0.9421441516799107,
+        "matured_rows": 6758,
+        "rows": 7173
+      },
+      "0.500": {
+        "coverage": 0.8925135926390632,
+        "matured_rows": 6402,
+        "rows": 7173
+      },
+      "1.000": {
+        "coverage": 0.7890701240763976,
+        "matured_rows": 5660,
+        "rows": 7173
+      },
+      "2.000": {
+        "coverage": 0.6283284539244389,
+        "matured_rows": 4507,
+        "rows": 7173
+      },
+      "3.000": {
+        "coverage": 0.49477206189878714,
+        "matured_rows": 3549,
+        "rows": 7173
+      },
+      "5.000": {
+        "coverage": 0.30935452390910356,
+        "matured_rows": 2219,
+        "rows": 7173
+      }
+    },
+    "ledger_hindsight_coverage": 0.722311844018243,
+    "ledger_matured_rows": 36268,
+    "ledger_rows": 50211,
+    "mean_aggregate_error": 1.894323644377554,
+    "mean_ego_only_error": 1.9390940359210005,
+    "mean_peer_realized_error": 2.2395561049901507,
+    "primary_error_definition": "2D XY Euclidean distance between receiver realized_state and forecast position",
+    "shared_only_events": 12008,
+    "supplemental_error_definition": "3D Euclidean distance is retained in *_error_3d fields",
+    "track_rows": 12594,
+    "tracking_failures": []
+  }
+}

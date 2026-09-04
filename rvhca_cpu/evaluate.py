@@ -477,6 +477,16 @@ def _mtr_trajectory_payload(value: Any) -> Optional[Tuple[np.ndarray, np.ndarray
     return trajectories, scores
 
 
+def _distance_xy(a: np.ndarray, b: np.ndarray) -> float:
+    """Primary MTR metric in the predicted planar frame."""
+    return float(np.linalg.norm(np.asarray(a)[..., :2] - np.asarray(b)[..., :2]))
+
+
+def _distance_3d(a: np.ndarray, b: np.ndarray) -> float:
+    """Supplemental 3-D sensitivity metric."""
+    return float(np.linalg.norm(np.asarray(a)[..., :3] - np.asarray(b)[..., :3]))
+
+
 def _future_gt_trajectory(
     row: Mapping[str, Any],
     gt_id: str,
@@ -510,9 +520,11 @@ def _trajectory_metrics(
     gt_index: RawGTIndex,
 ) -> Dict[str, Any]:
     errors: MutableMapping[str, List[float]] = defaultdict(list)
+    errors_3d: MutableMapping[str, List[float]] = defaultdict(list)
     model_errors: MutableMapping[Tuple[str, str], List[float]] = defaultdict(list)
     mtr_model_errors: MutableMapping[Tuple[str, str, str], List[float]] = defaultdict(list)
     mtr_horizon_errors: MutableMapping[Tuple[str, str, str], List[float]] = defaultdict(list)
+    mtr_horizon_errors_3d: MutableMapping[Tuple[str, str, str], List[float]] = defaultdict(list)
     # Per-horizon action-space diagnostic for the two available predictions:
     # choose ego or peer (oracle), or take their arithmetic mean.  These are
     # offline GT metrics only; no choice is exposed to the online ledger.
@@ -520,6 +532,7 @@ def _trajectory_metrics(
     mtr_oracle_scene_errors: MutableMapping[Tuple[str, str], List[Tuple[float, float, float, float]]] = defaultdict(list)
     native_errors: MutableMapping[Tuple[str, str], List[Tuple[float, float, float, float]]] = defaultdict(list)
     native_scene_errors: MutableMapping[Tuple[str, str, str], List[Tuple[float, float, float, float]]] = defaultdict(list)
+    native_3d_errors: MutableMapping[Tuple[str, str], List[Tuple[float, float, float, float]]] = defaultdict(list)
     native_seen: set = set()
     rows_used = 0
     mtr_rows_used = 0
@@ -553,10 +566,14 @@ def _trajectory_metrics(
         if peer is None or ego is None:
             continue
         rows_used += 1
-        peer_error = float(np.linalg.norm(peer - target))
-        ego_error = float(np.linalg.norm(ego - target))
+        peer_error = _distance_xy(peer, target)
+        ego_error = _distance_xy(ego, target)
+        peer_error_3d = _distance_3d(peer, target)
+        ego_error_3d = _distance_3d(ego, target)
         errors["peer"].append(peer_error)
         errors["ego_only"].append(ego_error)
+        errors_3d["peer"].append(peer_error_3d)
+        errors_3d["ego_only"].append(ego_error_3d)
         peer_model = str((row.get("forecast") or {}).get("model", "unknown"))
         ego_model = str((row.get("ego_forecast") or {}).get("model", "unknown"))
         horizon_key = "%.1f" % horizon_s
@@ -568,9 +585,11 @@ def _trajectory_metrics(
             mtr_model_errors[(ego_model, "ego_only", "all")].append(ego_error)
             mtr_horizon_errors[(peer_model, "peer", horizon_key)].append(peer_error)
             mtr_horizon_errors[(ego_model, "ego_only", horizon_key)].append(ego_error)
+            mtr_horizon_errors_3d[(peer_model, "peer", horizon_key)].append(peer_error_3d)
+            mtr_horizon_errors_3d[(ego_model, "ego_only", horizon_key)].append(ego_error_3d)
             oracle_error = min(peer_error, ego_error)
             mean_fusion = 0.5 * (peer + ego)
-            mean_fusion_error = float(np.linalg.norm(mean_fusion - target))
+            mean_fusion_error = _distance_xy(mean_fusion, target)
             oracle_values = (peer_error, ego_error, oracle_error, mean_fusion_error)
             mtr_oracle_horizon_errors[horizon_key].append(oracle_values)
             mtr_oracle_scene_errors[(scene, horizon_key)].append(oracle_values)
@@ -603,7 +622,12 @@ def _trajectory_metrics(
             if target_path is None:
                 continue
             native_seen.add(native_key)
-            errors_by_mode = np.linalg.norm(trajectories - target_path[None, :, :], axis=2)
+            errors_by_mode = np.linalg.norm(
+                trajectories[:, :, :2] - target_path[None, :, :2], axis=2
+            )
+            errors_by_mode_3d = np.linalg.norm(
+                trajectories[:, :, :3] - target_path[None, :, :3], axis=2
+            )
             mode_ade = errors_by_mode.mean(axis=1)
             mode_fde = errors_by_mode[:, -1]
             top_mode = int(np.argmax(scores))
@@ -615,9 +639,19 @@ def _trajectory_metrics(
             )
             native_errors[(model, role)].append(values)
             native_scene_errors[(scene, model, role)].append(values)
+            native_3d_errors[(model, role)].append(
+                (
+                    float(np.min(errors_by_mode_3d.mean(axis=1))),
+                    float(np.min(errors_by_mode_3d[:, -1])),
+                    float(errors_by_mode_3d[top_mode].mean()),
+                    float(errors_by_mode_3d[top_mode, -1]),
+                )
+            )
         if aggregate is not None:
-            aggregate_error = float(np.linalg.norm(aggregate - target))
+            aggregate_error = _distance_xy(aggregate, target)
+            aggregate_error_3d = _distance_3d(aggregate, target)
             errors["aggregate"].append(aggregate_error)
+            errors_3d["aggregate"].append(aggregate_error_3d)
             model = str((row.get("aggregate_forecast") or {}).get("model", "unknown"))
             model_counts[model] += 1
             model_errors[(model, "aggregate")].append(aggregate_error)
@@ -626,7 +660,7 @@ def _trajectory_metrics(
             if (model == "cmp" or model.startswith("cmp_")) and cmp_aggregate is None:
                 harm_cmp.append(aggregate_error > ego_error + 0.1)
         if cmp_aggregate is not None:
-            cmp_error = float(np.linalg.norm(cmp_aggregate - target))
+            cmp_error = _distance_xy(cmp_aggregate, target)
             model_errors[("cmp_aggregate", "aggregate")].append(cmp_error)
             harm_cmp.append(cmp_error > ego_error + 0.1)
     metrics: Dict[str, Any] = {"rows_used": rows_used, "model_counts": dict(model_counts)}
@@ -638,6 +672,13 @@ def _trajectory_metrics(
             "ADE": float(np.mean(values)) if values else None,
             "FDE": float(np.mean(values)) if values else None,
         }
+    metrics["supplemental_3d_by_model"] = {
+        name: {
+            "rows": len(values),
+            "mean_error": float(np.mean(values)) if values else None,
+        }
+        for name, values in sorted(errors_3d.items())
+    }
     cmp_values = model_errors.get(("cmp_aggregate", "aggregate"), [])
     if not cmp_values:
         cmp_values = [
@@ -672,6 +713,12 @@ def _trajectory_metrics(
             "rows": len(values),
             "ADE": float(np.mean(values)) if values else None,
             "FDE": float(np.mean(values)) if values else None,
+        }
+    metrics["mtr_3d_by_model_horizon"] = {}
+    for (model, role, horizon), values in sorted(mtr_horizon_errors_3d.items()):
+        metrics["mtr_3d_by_model_horizon"].setdefault(model, {}).setdefault(horizon, {})[role] = {
+            "rows": len(values),
+            "mean_point_error_3d": float(np.mean(values)) if values else None,
         }
     def _oracle_summary(values: Sequence[Tuple[float, float, float, float]]) -> Dict[str, Any]:
         array = np.asarray(values, dtype=np.float64)
@@ -708,9 +755,13 @@ def _trajectory_metrics(
         },
     }
     metrics["mtr_top_score_error_definition"] = (
-        "For each ledger horizon, mean 3D Euclidean GT error of the selected-score "
+        "For each ledger horizon, mean 2D XY Euclidean GT error of the selected-score "
         "MTR position at that single horizon; the legacy ADE/FDE fields above are "
         "point-error aliases, not full-trajectory ADE/FDE."
+    )
+    metrics["mtr_top_score_supplemental_3d_definition"] = (
+        "The same selected-score points are also summarized in supplemental_3d_by_model "
+        "and mtr_3d_by_model_horizon; 3-D is not used for primary Harm Rate."
     )
     metrics["mtr_native_minADE6_minFDE6"] = {}
     for (model, role), values in sorted(native_errors.items()):
@@ -722,6 +773,17 @@ def _trajectory_metrics(
             "top_score_full_ADE": float(native[:, 2].mean()) if len(values) else None,
             "top_score_full_FDE": float(native[:, 3].mean()) if len(values) else None,
             "definition": "six MTR modes over the complete 0.1--5.0s trajectory; one row per source/target/send-time",
+        }
+    metrics["mtr_native_minADE6_minFDE6_3d_sensitivity"] = {}
+    for (model, role), values in sorted(native_3d_errors.items()):
+        native = np.asarray(values, dtype=np.float64)
+        metrics["mtr_native_minADE6_minFDE6_3d_sensitivity"].setdefault(model, {})[role] = {
+            "rows": len(values),
+            "minADE6_3d": float(native[:, 0].mean()) if len(values) else None,
+            "minFDE6_3d": float(native[:, 1].mean()) if len(values) else None,
+            "top_score_full_ADE_3d": float(native[:, 2].mean()) if len(values) else None,
+            "top_score_full_FDE_3d": float(native[:, 3].mean()) if len(values) else None,
+            "definition": "supplemental 3-D Euclidean sensitivity; primary native metrics use XY",
         }
     metrics["mtr_native_by_scene"] = {}
     for (scene, model, role), values in sorted(native_scene_errors.items()):

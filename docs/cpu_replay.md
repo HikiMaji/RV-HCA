@@ -28,7 +28,7 @@ PYTHONPATH=$PWD /root/autodl-tmp/RV-HCA/.venv/bin/python \
 
 ## 输出
 
-- `local_tracks.jsonl`：source-local AB3DMOT ID、测量 pose、world/ local center、速度；不含数据集 actor/GT ID。
+- `local_tracks.jsonl`：fixed-world AB3DMOT ID、测量 pose、world/local center、速度；不含数据集 actor/GT ID。固定 world 是为了让 tracker 的运动模型不吸收 source 自车运动。
 - `association_events.jsonl`：packet 到达时的 receiver-side Hungarian 几何关联、gate、confidence、`common`/`shared_only`，并保存 send/arrival frame。
 - `prediction_ledger.jsonl`：核心键 `(receiver, source, receiver_target_id, send_time, horizon, forecast)`，并附带 arrival、receiver-only observation、realized error 和删失原因。
 - `baseline_summary.json`：recent-error、EWMA、metadata-only 的因果 prefix 选择汇总。

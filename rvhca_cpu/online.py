@@ -143,6 +143,22 @@ def detector_to_ab3dmot(
     return dets, info, score
 
 
+def ab3dmot_detections_to_world(dets: np.ndarray, pose: Sequence[float]) -> np.ndarray:
+    """Transform AB3DMOT ``[h,w,l,x,y,z,yaw]`` detections to world XY/Z."""
+    output = np.asarray(dets, dtype=np.float64).copy()
+    if output.ndim != 2 or output.shape[1] != 7:
+        raise ValueError("dets must have shape (N, 7)")
+    if len(output):
+        to_world = pose_to_world_matrix(pose)
+        yaw_offset = math.radians(float(np.asarray(pose, dtype=np.float64)[4]))
+        output[:, 3:6] = np.asarray(
+            [transform_point(center, to_world) for center in output[:, 3:6]],
+            dtype=np.float64,
+        )
+        output[:, 6] = [wrap_angle(float(yaw) + yaw_offset) for yaw in output[:, 6]]
+    return output
+
+
 @dataclass
 class TrackRow:
     sequence_id: str
@@ -176,6 +192,7 @@ class TrackRow:
             "score": self.score,
             "pose": self.pose,
             "velocity_world": self.velocity_world,
+            "tracking_frame": "world_fixed",
         }
 
 
@@ -192,6 +209,10 @@ def _tracker_config() -> Any:
             "det_name": "pointpillar-CoBEVT-nocompression",
             "score_threshold": -10000,
             "num_hypo": 1,
+            # Detections are transformed to a fixed world frame before they
+            # enter AB3DMOT.  The upstream OPV2V ``ego_com`` implementation
+            # is currently a no-op, so enabling the flag with local-frame
+            # detections would not actually compensate ego motion.
             "ego_com": False,
             "vis": False,
             "affi_pro": True,
@@ -206,15 +227,23 @@ def track_source(
     frame_period_s: float = 0.1,
     min_score: float = 0.25,
 ) -> List[TrackRow]:
-    """Run source-local AB3DMOT in timestamp order and emit GT-free rows."""
+    """Track detections in a fixed world frame and emit GT-free rows.
+
+    Detector boxes arrive in the source's instantaneous local frame.  Feeding
+    those boxes directly to a tracker makes its motion model absorb source
+    vehicle motion.  We therefore apply the measured pose before tracking and
+    convert each tracker output back to the current local frame only for the
+    serialized ``TrackRow`` view.  This is a functional ego-motion
+    compensation path and does not use labels or future observations.
+    """
 
     AB3DMOT = _ensure_ab3dmot_import()
-    import contextlib
-
     tracker = AB3DMOT(
         _tracker_config(),
         "Car",
         calib=None,
+        # The tracker sees fixed-world coordinates; passing the upstream
+        # KITTI-style OXTS object here would apply an incompatible/no-op path.
         oxts=None,
         img_dir=None,
         vis_dir=None,
@@ -233,21 +262,24 @@ def track_source(
         boxes2d = _as_float_array(frame.get("boxes2d", np.empty((0, 4))))
         scores = _as_float_array(frame.get("scores", np.empty((0,))))
         dets, info, _ = detector_to_ab3dmot(boxes, boxes2d, scores, min_score)
+        to_world = pose_to_world_matrix(pose)
+        world_to_local = np.linalg.inv(to_world)
+        yaw_offset = math.radians(float(pose[4]))
+        dets_world = ab3dmot_detections_to_world(dets, pose)
         out, _ = tracker.track(
-            {"dets": dets, "info": info, "cav_id": np.zeros(len(dets), dtype=np.int64)},
+            {"dets": dets_world, "info": info, "cav_id": np.zeros(len(dets_world), dtype=np.int64)},
             frame_idx,
             "%s_%s" % (sequence_id, source),
         )
         output = out[0]
-        to_world = pose_to_world_matrix(pose)
-        yaw_offset = math.radians(float(pose[4]))
         for item in output:
-            # AB3DMOT output: h,w,l,x,y,z,theta,id,info(7),cav_id.
-            center_local = np.asarray(item[3:6], dtype=np.float64)
+            # AB3DMOT output: h,w,l,x,y,z,theta,id,info(7),cav_id.  The
+            # center/yaw are world-frame values because dets_world was fed in.
+            center_world = np.asarray(item[3:6], dtype=np.float64)
             local_id = int(round(float(item[7])))
-            center_world = transform_point(center_local, to_world)
-            yaw_local = float(item[6])
-            yaw_world = wrap_angle(yaw_local + yaw_offset)
+            center_local = transform_point(center_world, world_to_local)
+            yaw_world = float(item[6])
+            yaw_local = wrap_angle(yaw_world - yaw_offset)
             score = float(item[14]) if len(item) > 14 and np.isfinite(item[14]) else 0.0
             velocity = np.zeros(3, dtype=np.float64)
             if local_id in previous_world:
@@ -441,6 +473,13 @@ def _distance(a: Sequence[float], b: Sequence[float]) -> float:
     return float(np.linalg.norm(np.asarray(a, dtype=np.float64) - np.asarray(b, dtype=np.float64)))
 
 
+def _distance_xy(a: Sequence[float], b: Sequence[float]) -> float:
+    """Primary trajectory distance: planar XY, matching the MTR head."""
+    aa = np.asarray(a, dtype=np.float64).reshape(-1)
+    bb = np.asarray(b, dtype=np.float64).reshape(-1)
+    return float(np.linalg.norm(aa[:2] - bb[:2]))
+
+
 def _safe_json_value(value: Any) -> Any:
     if isinstance(value, np.ndarray):
         return value.tolist()
@@ -461,6 +500,8 @@ def build_replay(
     aggregate_mode: str = "none",
     scene_allowlist: Optional[Sequence[str]] = None,
     max_frames_per_source: Optional[int] = None,
+    detector_source_model: Optional[str] = None,
+    detector_cache_path: Optional[str] = None,
 ) -> Dict[str, Any]:
     """Run the GT-free CPU pipeline and return JSON-serializable artifacts."""
 
@@ -687,7 +728,10 @@ def build_replay(
                                 "realized_state": None,
                                 "peer_realized_error": None,
                                 "ego_only_error": None,
+                                "peer_realized_error_3d": None,
+                                "ego_only_error_3d": None,
                                 "aggregate_error": None,
+                                "aggregate_error_3d": None,
                                 "cmp_aggregate_error": None,
                                 "error_type": "none",
                                 "censor_reason": None,
@@ -706,16 +750,24 @@ def build_replay(
                                     row["valid_mask"] = True
                                     row["matched_receiver_track_id"] = observed.local_track_id
                                     row["realized_state"] = realized
-                                    row["peer_realized_error"] = _distance(peer_forecast, realized)
-                                    row["ego_only_error"] = _distance(ego_forecast, realized)
+                                    # Primary errors are planar because MTR's
+                                    # trajectory head predicts XY.  Keep the
+                                    # full 3-D value as an explicit sensitivity
+                                    # field rather than letting z bookkeeping
+                                    # define Harm Rate.
+                                    row["peer_realized_error"] = _distance_xy(peer_forecast, realized)
+                                    row["ego_only_error"] = _distance_xy(ego_forecast, realized)
+                                    row["peer_realized_error_3d"] = _distance(peer_forecast, realized)
+                                    row["ego_only_error_3d"] = _distance(ego_forecast, realized)
                                     if aggregate_forecast is not None:
-                                        row["aggregate_error"] = _distance(aggregate_forecast, realized)
+                                        row["aggregate_error"] = _distance_xy(aggregate_forecast, realized)
+                                        row["aggregate_error_3d"] = _distance(aggregate_forecast, realized)
                                     row["error_type"] = "displacement"
                             ledger.append(row)
 
     summary = summarize_replay(all_tracks, association_events, ledger, tracking_failures)
     return {
-        "schema_version": "rvhca.cpu_replay.v0",
+        "schema_version": "rvhca.cpu_replay.v1",
         "config": {
             "frame_period_s": frame_period_s,
             "min_score": min_score,
@@ -725,6 +777,10 @@ def build_replay(
             "peer_delay_s": peer_delay_s,
             "horizons_s": [float(x) for x in horizons_s],
             "aggregate_mode": aggregate_mode,
+            "tracking_frame": "world_fixed",
+            "primary_error_definition": "2D XY Euclidean distance; 3D fields are supplemental",
+            "detector_source_model": detector_source_model,
+            "detector_cache_path": detector_cache_path,
         },
         "tracks": [row.as_dict() for row in all_tracks],
         "association_events": association_events,
@@ -756,6 +812,8 @@ def summarize_replay(
         "mean_ego_only_error": None,
         "mean_aggregate_error": None,
         "harm_rate_eps_0.1m": None,
+        "primary_error_definition": "2D XY Euclidean distance between receiver realized_state and forecast position",
+        "supplemental_error_definition": "3D Euclidean distance is retained in *_error_3d fields",
         "tracking_failures": list(tracking_failures),
     }
     if valid:

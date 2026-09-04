@@ -69,9 +69,16 @@ PYTHONPATH=$PWD /root/autodl-tmp/RV-HCA/.venv/bin/python \
 ```bash
 PYTHONPATH=$PWD /root/autodl-tmp/RV-HCA/.venv/bin/python \
   scripts/analyze_mtr_predictiveness.py \
-  data/intermediate/gtfree_cpu/opv2v_3scene_mtr/prediction_ledger.jsonl
+  data/intermediate/gtfree_cpu/opv2v_3scene_mtr_3scene_eval/prediction_ledger.jsonl
 ```
+
+修复后的 MTR wrapper 要求 history 与 checkpoint 的 detector family 一致；当前
+官方 peer/no-agg 与 ego/no-coop checkpoint 使用不同 history family，因此应分别
+使用 `run_gtfree_mtr.py --role peer` / `--role ego` 导出，只有共享且兼容的 paired
+replay 才能使用 `--role both`。不兼容输入会被 strict audit 拒绝。
 
 ## 审查入口
 
 建议先阅读 [`docs/rv_hca_core_scientific_check.md`](docs/rv_hca_core_scientific_check.md) 和 [`docs/mtr_integration_status.md`](docs/mtr_integration_status.md)，再查看 `data/intermediate/gtfree_cpu/opv2v_3scene_mtr_3scene_eval/` 下的 JSON 摘要。完整 ledger 和原始输入留在本地，不属于 GitHub 快照。
+
+本地 review 核验记录见 [`docs/re_9_4_verification.md`](docs/re_9_4_verification.md)。

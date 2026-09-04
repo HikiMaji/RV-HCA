@@ -1,6 +1,10 @@
 # CMP/MTR prediction integration status
 
-更新时间：2026-09-04。本文记录官方 MTR 的 GT-free 接入与第一轮预测性结果；不包含 reliability controller。
+更新时间：2026-09-04。本文记录官方 MTR 的 GT-free 接入与代码审计；不包含 reliability controller。
+
+> **结果冻结提示**：本地已修复 MTR world-history、fixed-world tracking、XY 主指标、EWMA 和 A/B/C target-level ego 条件。本文下方旧的三场景 MTR 数字来自修复前输入，全部标为 historical/invalid，不能作为当前科学结论；必须通过 `run_gtfree_mtr.py` 的 input-distribution audit 后重跑。
+
+修复核验表见 [`docs/re_9-4_verification.md`](re_9-4_verification.md)。
 
 ## 当前事实
 
@@ -34,14 +38,21 @@ forecast_frame, pred_trajs[M,T,2/3], pred_scores[M], time_offsets_s[T], model
 `heldout_scene_evaluation` 是显式 leave-one-scene-out 诊断，阈值只从其他 scene
 的历史误差中取中位数，不训练 controller。
 
-## 已完成的 4090 GT-free MTR 运行
+## 修复前的 4090 GT-free MTR 运行（historical，仅供审计）
 
 运行器为 [`scripts/run_gtfree_mtr.py`](../scripts/run_gtfree_mtr.py)，先用
 `cmp_mtr_no_agg` 生成 peer 预测，再换入 `cmp_mtr_no_coop` 生成 ego 预测；
-每条记录均为 source-local track、`uses_gt=false`，不含 native GT 字段。
+每条记录均为 GT-free track、`uses_gt=false`，不含 native GT 字段。
 三场景 send frame 从 10 开始，共 882 个 source/frame group、9,583 个中心目标，
 导出 19,166 条真实多模态记录（peer/ego 各 9,583）。单场景 scene-22 的 2,082
 条记录仍保留作为 smoke 基线；接入器曾发现并已修正 peer/ego 同键的角色过滤问题。
+
+这些数字来自修复前的 historical run。修复后 runner 会先审计 `run_summary.json`
+中的 detector provenance 与 YAML 的 `preprocessed_pred_traj_dir`；PointPillar
+history 不再允许直接送入 CoBEVT-c256 peer checkpoint。`--role peer` 和
+`--role ego` 可分别在各自 native history 上做 smoke/export；`--role both`
+只有在一个明确兼容的 paired history 配置下才可用于科学比较，不能用
+`--allow-input-mismatch` 的结果写论文。
 
 产物：
 

@@ -1,0 +1,180 @@
+{
+  "association": {
+    "all_peer_opportunity_recall": 0.28017481128327376,
+    "association_precision": 0.9911454673225579,
+    "association_recall": 0.3395608628659476,
+    "common_evaluable_events": 7115,
+    "common_events": 7173,
+    "conditional_association_recall": 0.9911454673225579,
+    "conditional_definition": "correct common association / opportunities where peer and receiver local tracks both have independent offline GT matches",
+    "conditional_opportunities": 7115,
+    "correct_common_events": 7052,
+    "end_to_end_association_recall": 0.3395608628659476,
+    "end_to_end_definition": "correct common association / all raw-GT opportunities where the peer object is present in the receiver at packet arrival (receiver-visible opportunity; raw peer targets invisible at the receiver are reported separately)",
+    "end_to_end_opportunities": 20768,
+    "offline_common_candidate_denominator": 20768,
+    "peer_raw_opportunities": 25170,
+    "peer_track_misses_on_opportunity": 5247,
+    "receiver_gt_unavailable_for_peer": 3489,
+    "receiver_invisible_opportunities": 4402,
+    "receiver_track_misses_on_opportunity": 5289,
+    "receiver_visibility_rate": 0.8251092570520461,
+    "receiver_visible_opportunities": 20768,
+    "shared_only_definition": "peer forecast rows whose target is present in receiver raw GT at arrival; this is coverage only and is not a common-target recall",
+    "shared_only_events": 12008,
+    "shared_only_offline_hit_rate": 0.7007828114590273,
+    "shared_only_with_receiver_gt": 8415
+  },
+  "association_gate_m": 3.0,
+  "ledger": {
+    "common_rows": 50211,
+    "horizon": {
+      "0.100": {
+        "coverage": 1.0,
+        "matured_valid_rows": 7173,
+        "rows": 7173
+      },
+      "0.300": {
+        "coverage": 0.9421441516799107,
+        "matured_valid_rows": 6758,
+        "rows": 7173
+      },
+      "0.500": {
+        "coverage": 0.8925135926390632,
+        "matured_valid_rows": 6402,
+        "rows": 7173
+      },
+      "1.000": {
+        "coverage": 0.7890701240763976,
+        "matured_valid_rows": 5660,
+        "rows": 7173
+      },
+      "2.000": {
+        "coverage": 0.6283284539244389,
+        "matured_valid_rows": 4507,
+        "rows": 7173
+      },
+      "3.000": {
+        "coverage": 0.49477206189878714,
+        "matured_valid_rows": 3549,
+        "rows": 7173
+      },
+      "5.000": {
+        "coverage": 0.30935452390910356,
+        "matured_valid_rows": 2219,
+        "rows": 7173
+      }
+    },
+    "matured_valid_rows": 36268,
+    "row_hindsight_coverage": 0.722311844018243
+  },
+  "raw_root": "/root/autodl-tmp/RV-HCA/data/raw/OPV2V/test",
+  "replay_dir": "data/intermediate/gtfree_cpu/opv2v_3scene_worldfixed_pointpillar",
+  "schema_version": "rvhca.offline_eval.v1",
+  "track_survival": {
+    "1.0s": {
+      "definition": "matched start row -> exact frame t+h; same_gt additionally preserves offline GT match",
+      "denominator_matched_start_rows": 11525,
+      "horizon_s": 1.0,
+      "id_present_rate": 0.8935357917570499,
+      "same_gt_rows": 10273,
+      "same_gt_survival_rate": 0.8913665943600868,
+      "same_local_id_rows": 10298
+    },
+    "2.0s": {
+      "definition": "matched start row -> exact frame t+h; same_gt additionally preserves offline GT match",
+      "denominator_matched_start_rows": 10561,
+      "horizon_s": 2.0,
+      "id_present_rate": 0.8248271943944703,
+      "same_gt_rows": 8691,
+      "same_gt_survival_rate": 0.8229334343338699,
+      "same_local_id_rows": 8711
+    },
+    "3.0s": {
+      "definition": "matched start row -> exact frame t+h; same_gt additionally preserves offline GT match",
+      "denominator_matched_start_rows": 9603,
+      "horizon_s": 3.0,
+      "id_present_rate": 0.7668436946787462,
+      "same_gt_rows": 7347,
+      "same_gt_survival_rate": 0.7650734145579506,
+      "same_local_id_rows": 7364
+    },
+    "5.0s": {
+      "definition": "matched start row -> exact frame t+h; same_gt additionally preserves offline GT match",
+      "denominator_matched_start_rows": 7605,
+      "horizon_s": 5.0,
+      "id_present_rate": 0.6803418803418804,
+      "same_gt_rows": 5158,
+      "same_gt_survival_rate": 0.6782380013149244,
+      "same_local_id_rows": 5174
+    }
+  },
+  "tracking": {
+    "gt_instances": 16760,
+    "id_switches": 115,
+    "id_switches_per_100_matched_rows": 0.9236205927234761,
+    "matched_gt_instances": 12451,
+    "matched_track_rows": 12451,
+    "track_persistence_mean": 0.9999231891850373,
+    "track_persistence_median": 1.0,
+    "track_persistence_p10": 1.0,
+    "track_precision": 0.9886453866920756,
+    "track_recall": 0.7428997613365155,
+    "track_rows": 12594
+  },
+  "trajectory": {
+    "aggregate": {
+      "ADE": 2.5163674450683247,
+      "FDE": 2.5163674450683247,
+      "rows": 42759
+    },
+    "cmp_aggregate": null,
+    "ego_only": {
+      "ADE": 2.7061594724953624,
+      "FDE": 2.7061594724953624,
+      "rows": 42759
+    },
+    "harm_rate_definition": "relative harm = peer_error > ego_error + 0.1m for the peer-vs-ego comparison; legacy probe harm fields retain their aggregate definition",
+    "model_counts": {
+      "mean_probe_not_cmp": 42759
+    },
+    "mtr_3d_by_model_horizon": {},
+    "mtr_by_model": {},
+    "mtr_by_model_horizon": {},
+    "mtr_ego_peer_oracle_and_naive_mean": {
+      "by_horizon": {},
+      "by_scene_horizon": {},
+      "definition": "On paired real MTR top-score positions at each ledger horizon, oracle_error=min(peer_error, ego_error); naive_mean_fusion is the arithmetic mean of the peer and ego positions. Both are offline GT diagnostics and are not an online controller.",
+      "overall": {
+        "rows": 0
+      }
+    },
+    "mtr_native_by_scene": {},
+    "mtr_native_minADE6_minFDE6": {},
+    "mtr_native_minADE6_minFDE6_3d_sensitivity": {},
+    "mtr_rows_used": 0,
+    "mtr_top_score_error_definition": "For each ledger horizon, mean 2D XY Euclidean GT error of the selected-score MTR position at that single horizon; the legacy ADE/FDE fields above are point-error aliases, not full-trajectory ADE/FDE.",
+    "mtr_top_score_supplemental_3d_definition": "The same selected-score points are also summarized in supplemental_3d_by_model and mtr_3d_by_model_horizon; 3-D is not used for primary Harm Rate.",
+    "peer": {
+      "ADE": 2.783955920894632,
+      "FDE": 2.783955920894632,
+      "rows": 42759
+    },
+    "probe_aggregate_harm_rate_eps_0.1m": 0.2789354287986155,
+    "rows_used": 42759,
+    "supplemental_3d_by_model": {
+      "aggregate": {
+        "mean_error": 2.54492946024889,
+        "rows": 42759
+      },
+      "ego_only": {
+        "mean_error": 2.7475626437585516,
+        "rows": 42759
+      },
+      "peer": {
+        "mean_error": 2.8252388879729957,
+        "rows": 42759
+      }
+    }
+  }
+}

@@ -9,7 +9,7 @@
 
 ```text
 raw detections
-    -> source-local AB3DMOT tracks (local_track_id)
+    -> fixed-world AB3DMOT tracks (local_track_id; local/world views retained)
     -> pose/time alignment into receiver frame
     -> receiver-side association (Hungarian + motion/geometry gate)
     -> receiver_target_id
@@ -20,7 +20,7 @@ raw detections
 | 阶段 | 在线允许的输入 | 产物 | GT 状态 |
 |---|---|---|---|
 | 检测 | raw LiDAR、检测器输出、测量/扰动 pose | detection boxes/scores | 禁止 |
-| 跟踪 | 当前检测、历史 tracker state、时间戳 | source-local `local_track_id`、state、covariance、track lifecycle | 禁止 |
+| 跟踪 | 当前检测、历史 tracker state、测量 pose、时间戳 | fixed-world `local_track_id`、local/world state、covariance、track lifecycle | 禁止 |
 | 对齐 | sender/receiver 测量 pose、send/arrival time、延迟模型 | receiver-frame state/forecast | 禁止使用 GT pose |
 | 跨源关联 | receiver local tracks、对齐后的 peer state、速度/航向/类别、gate cost | `receiver_target_id`、association confidence、common/shared-only 标记 | 禁止 |
 | 预测账本 | 已关联的 peer forecast 和 receiver target ID | immutable forecast row | 禁止 |
@@ -105,7 +105,7 @@ observation_time ~= send_time + horizon
    - horizon coverage 按 `horizon`、延迟、source、sequence 分层；
    - target coverage = 至少一个 matured row 的 common `(sequence, receiver_target_id, source)` 对 / common 对总数；
    - shared-only 只报告候选行数和后续 receiver 重新出现的比例。
-4. **Trajectory error**：在相同 `(sequence, receiver, receiver_target_id, send_time, horizon)` 的 paired rows 上计算 ego-only、peer realized、CMP aggregate 的 ADE/FDE。主比较使用 top-scored/committed trajectory，避免 minADE 的 oracle mode 选择；为兼容 CMP，再单独报告 native minADE6/minFDE6，不能把两者混用。
+4. **Trajectory error**：在相同 `(sequence, receiver, receiver_target_id, send_time, horizon)` 的 paired rows 上计算 ego-only、peer realized、CMP aggregate 的 **XY** ADE/FDE。主比较使用 top-scored/committed trajectory，避免 minADE 的 oracle mode 选择；为兼容 CMP，再单独报告 native minADE6/minFDE6，不能把两者混用。预测器没有可靠 z 轨迹时，3D 只作为显式 sensitivity 字段，不参与 primary Harm Rate。
 5. **Harm Rate**：在 valid common paired rows 上
 
    ```text

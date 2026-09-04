@@ -125,6 +125,7 @@ def _top_points_from_raw(path: Path) -> Dict[Tuple[str, str, int, str, str], Dic
             output[key] = {
                 "points": points,
                 "source_pose_at_send": record.get("source_pose_at_send"),
+                "forecast_frame": str(record.get("forecast_frame", "source@send_time")),
                 "send_time": float(record.get("send_time")),
                 "model": str(record.get("model", "")),
             }
@@ -249,15 +250,22 @@ def audit(
                 if raw_record is None or attached_receiver is None:
                     counts[role + ".missing_raw_or_attached"] += 1
                     continue
-                source_pose = raw_record.get("source_pose_at_send")
-                if not _is_finite_pose(source_pose):
-                    counts[role + ".invalid_source_pose"] += 1
-                    continue
                 source_point = raw_record["points"].get(horizon)
                 if source_point is None:
                     counts[role + ".missing_horizon"] += 1
                     continue
-                pred_world = transform_point(source_point, pose_to_world_matrix(source_pose))
+                forecast_frame = str(raw_record.get("forecast_frame", "source@send_time"))
+                source_pose = raw_record.get("source_pose_at_send")
+                if forecast_frame == "world":
+                    pred_world = source_point.copy()
+                else:
+                    if not _is_finite_pose(source_pose):
+                        counts[role + ".invalid_source_pose"] += 1
+                        continue
+                    if forecast_frame != "source@send_time":
+                        counts[role + ".unsupported_forecast_frame"] += 1
+                        continue
+                    pred_world = transform_point(source_point, pose_to_world_matrix(source_pose))
                 pred_receiver_from_world = transform_point(pred_world, world_to_receiver)
                 pred_receiver_residual = float(np.linalg.norm(pred_receiver_from_world - attached_receiver))
                 world_error_xy = float(np.linalg.norm(pred_world[:2] - target_world[:2]))
@@ -274,7 +282,7 @@ def audit(
                 source_track = tracks.get((scene, raw_source, send_frame, int(track_id)))
                 source_pose_translation_residual = None
                 source_pose_angle_residual_deg = None
-                if source_track is not None and _is_finite_pose(source_track.get("pose")):
+                if source_track is not None and _is_finite_pose(source_track.get("pose")) and _is_finite_pose(source_pose):
                     source_pose_array = np.asarray(source_pose, dtype=np.float64)
                     track_pose_array = np.asarray(source_track["pose"], dtype=np.float64)
                     source_pose_translation_residual = float(
@@ -325,6 +333,7 @@ def audit(
                             "receiver": receiver,
                             "source": source,
                             "role": role,
+                            "forecast_frame": forecast_frame,
                             "horizon": float(horizon),
                             "world_error_xy_m": world_error_xy,
                             "receiver_error_xy_m": receiver_error_xy,
@@ -386,7 +395,7 @@ def audit(
             reverse=True,
         )[:20],
         "time_reference_checks": {
-            "forecast_frame": "raw source@send_time -> source_pose_at_send -> world -> receiver_pose_at_send inverse",
+            "forecast_frame": "raw world -> receiver_pose_at_send inverse; legacy source@send_time additionally uses source_pose_at_send",
             "realized_frame": "future receiver local track at observation_frame_idx, whose center_world is transformed by receiver_pose_at_send inverse",
             "observation_time_definition": "observation_time = send_time + horizon; valid row also requires arrival_time <= observation_time",
             "observation_pose_control": "transforming the future target with receiver pose at observation time is intentionally reported as a wrong-frame control",

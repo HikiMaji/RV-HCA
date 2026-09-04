@@ -64,6 +64,8 @@ def main() -> None:
         aggregate_mode=args.aggregate_mode,
         scene_allowlist=args.scenes,
         max_frames_per_source=args.max_frames_per_source,
+        detector_source_model=str(detector_cache.get("source_model", args.input.stem)),
+        detector_cache_path=str(args.input),
     )
     write_replay(args.output_dir, replay)
     baseline_summary = summarize_baselines(replay["ledger"])

@@ -24,7 +24,7 @@ import numpy as np
 from rvhca_cpu.online import pose_to_world_matrix, transform_point
 
 
-SCHEMA_VERSION = "rvhca.mtr_prediction.v0"
+SCHEMA_VERSION = "rvhca.mtr_prediction.v1"
 
 # Exact keys used by the official MTR/CMP output and data loader.  Keep this
 # list explicit so benign online names such as receiver_target_id remain legal.

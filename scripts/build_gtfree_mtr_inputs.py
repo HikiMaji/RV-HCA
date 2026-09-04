@@ -3,8 +3,10 @@
 
 This is deliberately only the identity/time contract.  A GPU wrapper may use
 the manifest to construct the official MTR tensors and must emit normalized
-prediction records carrying the same ``source_track_id``.  No future labels,
-GT IDs, or cross-source matching are read here.
+prediction records carrying the same ``source_track_id``.  History positions
+are stored in a single world frame; local values remain only as an audit
+side-channel.  No future labels, GT IDs, or cross-source matching are read
+here.
 """
 
 from __future__ import annotations
@@ -52,13 +54,22 @@ def iter_records(
                     if item is None:
                         history.append({"frame_idx": history_frame, "valid": False})
                     else:
+                        if "center_world" not in item or "yaw_world" not in item:
+                            raise ValueError(
+                                "local track row lacks world state; regenerate the replay with the fixed-world tracker"
+                            )
                         history.append(
                             {
                                 "frame_idx": history_frame,
                                 "valid": True,
+                                # Keep local state for auditability, but make
+                                # the MTR input reference frame explicit and
+                                # uniform across all history timestamps.
                                 "center_local": list(item["center_local"]),
-                                "dims_hwl": list(item["dims_hwl"]),
                                 "yaw_local": float(item["yaw_local"]),
+                                "center_world": list(item["center_world"]),
+                                "yaw_world": float(item["yaw_world"]),
+                                "dims_hwl": list(item["dims_hwl"]),
                                 "score": float(item.get("score", 0.0)),
                             }
                         )
@@ -68,7 +79,7 @@ def iter_records(
                 if valid_count / len(history) < float(min_history_valid_ratio):
                     continue
                 yield {
-                    "schema_version": "rvhca.mtr_input.v0",
+                    "schema_version": "rvhca.mtr_input.v1",
                     "sequence_id": scene,
                     "source": source,
                     "source_track_id": str(local_id),
@@ -76,6 +87,7 @@ def iter_records(
                     "send_time": frame_idx * 0.1,
                     "past_frames": int(past_frames),
                     "history_valid_ratio": valid_count / len(history),
+                    "history_reference_frame": "world",
                     "history": history,
                     "source_pose_at_send": list(grouped[(scene, source, frame_idx, local_id)]["pose"]),
                     "uses_gt": False,

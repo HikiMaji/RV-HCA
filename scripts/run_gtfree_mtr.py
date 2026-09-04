@@ -3,14 +3,18 @@
 
 This adapter intentionally bypasses the native OPV2V MTR dataset/evaluator.
 The native path carries GT object ids and future labels in its batch.  Here
-the only input is the source-local track history produced by the GT-free
-replay.  The output is the small normalized prediction contract consumed by
+the only input is the GT-free track history produced by the replay (history
+positions are world-fixed; local IDs remain source-local).  The output is the
+small normalized prediction contract consumed by
 ``scripts/ingest_mtr_predictions.py``.
 
 The script is an inference/export adapter, not a reliability controller.  It
 uses one source/frame group per forward pass because the upstream encoder's
-lane indexing assumes that layout.  Use ``--max-frame``/``--max-groups`` for a
-smoke run before a longer GPU replay.
+lane indexing assumes that layout.  Use ``--role peer`` or ``--role ego`` with
+the corresponding native detector-history replay when the two official
+checkpoints require different input distributions; ``--role both`` is reserved
+for a genuinely matched paired replay.  Use ``--max-frame``/``--max-groups``
+for a smoke run before a longer GPU replay.
 """
 
 from __future__ import annotations
@@ -33,6 +37,87 @@ from PIL import Image
 def _read_jsonl(path: Path) -> List[Dict[str, Any]]:
     with path.open("r", encoding="utf-8") as handle:
         return [json.loads(line) for line in handle if line.strip()]
+
+
+def _track_source_model(tracks_path: Path, explicit: Optional[str]) -> str:
+    """Recover detector provenance without looking at labels.
+
+    New CPU replays put this in ``run_summary.json``.  The filename fallback
+    keeps the pre-existing detector-cache naming convention useful, while an
+    unknown source is intentionally not treated as compatible in strict mode.
+    """
+    if explicit:
+        return str(explicit)
+    summary_path = tracks_path.parent / "run_summary.json"
+    if summary_path.exists():
+        try:
+            summary = json.loads(summary_path.read_text(encoding="utf-8"))
+            value = summary.get("config", {}).get("detector_source_model")
+            if value:
+                return str(value)
+        except (OSError, ValueError, TypeError):
+            pass
+    name = tracks_path.parent.name.lower() + " " + tracks_path.name.lower()
+    if "corpbevt" in name or "cobevt" in name:
+        return "corpbevtlidar_delay_1_frame_aug_c256"
+    if "point_pillar" in name or "pointpillar" in name:
+        return "point_pillar_sinbevt"
+    return "unknown"
+
+
+def _history_family(config_path: Path) -> str:
+    """Return the detector-history family declared by an MTR YAML."""
+    text = config_path.read_text(encoding="utf-8").lower()
+    if "tracking_trajs_corpbevtlidar_delay_1_frame_aug_c256" in text:
+        return "corpbevtlidar_delay_1_frame_aug_c256"
+    if "tracking_trajs_point_pillar_sinbevt" in text:
+        return "point_pillar_sinbevt"
+    return "unknown"
+
+
+def _source_family(source_model: str) -> str:
+    value = str(source_model).lower()
+    if "corpbevt" in value or "cobevt" in value:
+        return "corpbevtlidar_delay_1_frame_aug_c256"
+    if "point_pillar" in value or "pointpillar" in value:
+        return "point_pillar_sinbevt"
+    return "unknown"
+
+
+def _input_distribution_audit(
+    tracks_path: Path,
+    peer_config: Path,
+    ego_config: Path,
+    explicit_source_model: Optional[str],
+    role: str = "both",
+) -> Dict[str, Any]:
+    source_model = _track_source_model(tracks_path, explicit_source_model)
+    source_family = _source_family(source_model)
+    peer_family = _history_family(peer_config)
+    ego_family = _history_family(ego_config)
+    issues = []
+    if source_family == "unknown":
+        issues.append("track provenance is unknown")
+    if role in {"both", "peer"} and peer_family == "unknown":
+        issues.append("peer checkpoint history family is unknown")
+    if role in {"both", "ego"} and ego_family == "unknown":
+        issues.append("ego checkpoint history family is unknown")
+    if role in {"both", "peer"} and peer_family != "unknown" and source_family != "unknown" and source_family != peer_family:
+        issues.append("peer checkpoint history family does not match track cache")
+    if role in {"both", "ego"} and ego_family != "unknown" and source_family != "unknown" and source_family != ego_family:
+        issues.append("ego checkpoint history family does not match track cache")
+    return {
+        "tracks": str(tracks_path),
+        "declared_source_model": source_model,
+        "track_history_family": source_family,
+        "peer_config": str(peer_config),
+        "peer_history_family": peer_family,
+        "ego_config": str(ego_config),
+        "ego_history_family": ego_family,
+        "role": role,
+        "issues": issues,
+        "status": "PASS" if not issues else "MISMATCH",
+    }
 
 
 def _dims_lwh(row: Mapping[str, Any]) -> Tuple[float, float, float]:
@@ -94,15 +179,19 @@ def _build_group(
             row = by_id[track_id].get(history_frame)
             if row is None:
                 continue
+            if "center_world" not in row or "yaw_world" not in row:
+                raise ValueError(
+                    "track rows must contain center_world/yaw_world; regenerate GT-free replay with the fixed-world tracker"
+                )
             length, width, height = _dims_lwh(row)
             past[object_index, time_index] = [
-                float(row["center_local"][0]),
-                float(row["center_local"][1]),
-                float(row["center_local"][2]),
+                float(row["center_world"][0]),
+                float(row["center_world"][1]),
+                float(row["center_world"][2]),
                 length,
                 width,
                 height,
-                float(row["yaw_local"]),
+                float(row["yaw_world"]),
                 1.0,
             ]
 
@@ -147,9 +236,10 @@ def _build_group(
         "source": source,
         "frame": frame,
         "center_ids": center_ids,
-        "center_xy": centers[:, 0:2].copy(),
+        "center_world_xy": centers[:, 0:2].copy(),
         "center_z": centers[:, 2].copy(),
-        "center_yaw": centers[:, 6].copy(),
+        "center_yaw_world": centers[:, 6].copy(),
+        "history_reference_frame": "world",
         "source_pose": pose,
         "obj_trajs": obj_trajs.astype(np.float32, copy=False),
         "obj_mask": obj_mask,
@@ -204,45 +294,47 @@ def _records_for_group(model: torch.nn.Module, group: Mapping[str, Any], role: s
         output = model(_make_batch(group))
     pred_xy = output["pred_trajs"][:, :, :, :2]
     scores = output["pred_scores"]
-    # Upstream MTR predicts in each target's centered source frame.  Rotate
-    # back by the local target heading and translate to source coordinates.
-    center_xy = torch.from_numpy(np.asarray(group["center_xy"], dtype=np.float32)).cuda()
-    center_yaw = torch.from_numpy(np.asarray(group["center_yaw"], dtype=np.float32)).cuda()
+    # Upstream MTR predicts in each target's centered frame.  This wrapper
+    # builds that frame from world-fixed histories, so the official inverse
+    # transform returns points directly to global world XY.
+    center_xy = torch.from_numpy(np.asarray(group["center_world_xy"], dtype=np.float32)).cuda()
+    center_yaw = torch.from_numpy(np.asarray(group["center_yaw_world"], dtype=np.float32)).cuda()
     cos_yaw = torch.cos(center_yaw)[:, None, None]
     sin_yaw = torch.sin(center_yaw)[:, None, None]
     x = pred_xy[:, :, :, 0]
     y = pred_xy[:, :, :, 1]
-    source_x = x * cos_yaw - y * sin_yaw + center_xy[:, None, None, 0]
-    source_y = x * sin_yaw + y * cos_yaw + center_xy[:, None, None, 1]
-    source_xy = torch.stack((source_x, source_y), dim=-1).cpu().numpy()
+    world_x = x * cos_yaw - y * sin_yaw + center_xy[:, None, None, 0]
+    world_y = x * sin_yaw + y * cos_yaw + center_xy[:, None, None, 1]
+    world_xy = torch.stack((world_x, world_y), dim=-1).cpu().numpy()
     # MTR's five-dimensional head contains planar position and GMM terms; it
     # does not predict a useful vertical coordinate.  Preserve the observed
     # local box height at send time rather than letting the contract's 2-D
     # fallback inject an artificial z=0 error.
     center_z = np.asarray(group["center_z"], dtype=np.float32)[:, None, None, None]
-    source_xyz = np.concatenate(
-        (source_xy, np.repeat(center_z, source_xy.shape[1], axis=1).repeat(source_xy.shape[2], axis=2)),
+    world_xyz = np.concatenate(
+        (world_xy, np.repeat(center_z, world_xy.shape[1], axis=1).repeat(world_xy.shape[2], axis=2)),
         axis=-1,
     )
     score_np = scores.detach().cpu().numpy()
-    offsets = (np.arange(1, source_xy.shape[2] + 1, dtype=np.float64) * 0.1).tolist()
+    offsets = (np.arange(1, world_xy.shape[2] + 1, dtype=np.float64) * 0.1).tolist()
     records: List[Dict[str, Any]] = []
     for index, track_id in enumerate(group["center_ids"]):
         records.append(
             {
-                "schema_version": "rvhca.mtr_prediction.v0",
+                "schema_version": "rvhca.mtr_prediction.v1",
                 "sequence_id": str(group["scene"]),
                 "source": str(group["source"]),
                 "source_track_id": str(track_id),
                 "send_frame_idx": int(group["frame"]),
                 "send_time": float(group["frame"]) * 0.1,
                 "role": role,
-                "forecast_frame": "source@send_time",
-                "pred_trajs": source_xyz[index].tolist(),
+                "forecast_frame": "world",
+                "pred_trajs": world_xyz[index].tolist(),
                 "pred_scores": score_np[index].tolist(),
                 "time_offsets_s": offsets,
                 "source_pose_at_send": list(group["source_pose"]),
                 "model": model_name,
+                "history_reference_frame": str(group.get("history_reference_frame", "world")),
                 "uses_gt": False,
             }
         )
@@ -258,9 +350,32 @@ def main() -> None:
     parser.add_argument("--lane-root", type=Path, default=root / "data" / "raw" / "OPV2V" / "additional" / "test")
     parser.add_argument("--mtr-root", type=Path, default=root / "vendor" / "CMP-upstream" / "MTR")
     parser.add_argument("--config", type=Path, default=None)
+    parser.add_argument(
+        "--ego-config",
+        type=Path,
+        default=None,
+        help="native no-coop YAML used only to audit the ego history distribution",
+    )
+    parser.add_argument(
+        "--track-source-model",
+        type=str,
+        default=None,
+        help="detector provenance written by the CPU replay; required when it cannot be inferred",
+    )
+    parser.add_argument(
+        "--allow-input-mismatch",
+        action="store_true",
+        help="run a labelled smoke test despite checkpoint/history mismatch; never use for scientific results",
+    )
     parser.add_argument("--lane-encoder", type=Path, default=root / "data" / "assets" / "checkpoints" / "CMP" / "pretrained" / "opv2v" / "swin-base-patch4-window7-224")
     parser.add_argument("--peer-checkpoint", type=Path, default=root / "data" / "assets" / "checkpoints" / "CMP" / "MTR" / "output" / "opv2v_multiego_cobevt_c256_no_agg" / "ckpt" / "best_model.pth")
     parser.add_argument("--ego-checkpoint", type=Path, default=root / "data" / "assets" / "checkpoints" / "CMP" / "MTR" / "output" / "opv2v_multiego_no_coop" / "ckpt" / "best_model.pth")
+    parser.add_argument(
+        "--role",
+        choices=("both", "peer", "ego"),
+        default="both",
+        help="export one checkpoint-compatible role when building separate native-distribution replays",
+    )
     parser.add_argument("--output", type=Path, default=None)
     parser.add_argument("--scene", action="append", default=None)
     parser.add_argument("--min-frame", type=int, default=10)
@@ -278,6 +393,19 @@ def main() -> None:
     tracks_path = args.tracks or (args.replay_dir / "local_tracks.jsonl")
     output = args.output or (args.replay_dir / "mtr_predictions_gtfree.jsonl")
     config = args.config or (args.mtr_root / "tools" / "cfgs" / "opv2v" / "opv2v_multiego_cobevt_c256_no_agg.yaml")
+    ego_config = args.ego_config or (args.mtr_root / "tools" / "cfgs" / "opv2v" / "opv2v_multiego_no_coop.yaml")
+    input_audit = _input_distribution_audit(
+        tracks_path, config, ego_config, args.track_source_model, args.role
+    )
+    print("input_distribution_audit=%s" % json.dumps(input_audit, ensure_ascii=False, sort_keys=True), flush=True)
+    if input_audit["issues"] and not args.allow_input_mismatch:
+        raise SystemExit(
+            "refusing MTR inference with an unverified checkpoint/history distribution; "
+            "use a compatible GT-free track replay or --allow-input-mismatch for a non-scientific smoke test"
+        )
+    output.parent.mkdir(parents=True, exist_ok=True)
+    with output.with_suffix(output.suffix + ".input_audit.json").open("w", encoding="utf-8") as audit_handle:
+        json.dump(input_audit, audit_handle, ensure_ascii=False, indent=2, sort_keys=True)
     rows = _read_jsonl(tracks_path)
     scenes = set(str(value) for value in args.scene) if args.scene else None
     grouped_keys = sorted(
@@ -328,30 +456,34 @@ def main() -> None:
     torch.set_float32_matmul_precision("high")
     torch.backends.cuda.matmul.allow_tf32 = True
     torch.backends.cudnn.allow_tf32 = True
-    model = _load_model(config, args.lane_encoder, args.peer_checkpoint)
-    output.parent.mkdir(parents=True, exist_ok=True)
+    model_config = ego_config if args.role == "ego" else config
+    model_checkpoint = args.ego_checkpoint if args.role == "ego" else args.peer_checkpoint
+    model = _load_model(model_config, args.lane_encoder, model_checkpoint)
     partial = output.with_suffix(output.suffix + ".partial")
     start = time.time()
     written = 0
     with partial.open("w", encoding="utf-8") as handle:
-        for index, group in enumerate(groups, start=1):
-            for record in _records_for_group(model, group, "peer", "cmp_mtr_no_agg"):
-                handle.write(json.dumps(record, ensure_ascii=False, separators=(",", ":")) + "\n")
-                written += 1
-            if index == 1 or index % 10 == 0 or index == len(groups):
-                elapsed = max(time.time() - start, 1e-9)
-                print(
-                    "peer_group=%d/%d records=%d rate=%.2f centers/s gpu_alloc=%.2fGB"
-                    % (index, len(groups), written, total_centers * index / len(groups) / elapsed, torch.cuda.memory_allocated() / 1e9),
-                    flush=True,
-                )
-        _swap_weights(model, args.ego_checkpoint)
-        for index, group in enumerate(groups, start=1):
-            for record in _records_for_group(model, group, "ego", "cmp_mtr_no_coop"):
-                handle.write(json.dumps(record, ensure_ascii=False, separators=(",", ":")) + "\n")
-                written += 1
-            if index == 1 or index % 10 == 0 or index == len(groups):
-                print("ego_group=%d/%d records=%d" % (index, len(groups), written), flush=True)
+        if args.role in {"both", "peer"}:
+            for index, group in enumerate(groups, start=1):
+                for record in _records_for_group(model, group, "peer", "cmp_mtr_no_agg"):
+                    handle.write(json.dumps(record, ensure_ascii=False, separators=(",", ":")) + "\n")
+                    written += 1
+                if index == 1 or index % 10 == 0 or index == len(groups):
+                    elapsed = max(time.time() - start, 1e-9)
+                    print(
+                        "peer_group=%d/%d records=%d rate=%.2f centers/s gpu_alloc=%.2fGB"
+                        % (index, len(groups), written, total_centers * index / len(groups) / elapsed, torch.cuda.memory_allocated() / 1e9),
+                        flush=True,
+                    )
+        if args.role == "both":
+            _swap_weights(model, args.ego_checkpoint)
+        if args.role in {"both", "ego"}:
+            for index, group in enumerate(groups, start=1):
+                for record in _records_for_group(model, group, "ego", "cmp_mtr_no_coop"):
+                    handle.write(json.dumps(record, ensure_ascii=False, separators=(",", ":")) + "\n")
+                    written += 1
+                if index == 1 or index % 10 == 0 or index == len(groups):
+                    print("ego_group=%d/%d records=%d" % (index, len(groups), written), flush=True)
     os.replace(partial, output)
     print("output=%s" % output)
     print("records=%d" % written)

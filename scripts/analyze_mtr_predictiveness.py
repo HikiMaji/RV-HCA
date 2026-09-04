@@ -5,7 +5,9 @@ This is a label-free-at-inference feasibility audit.  ``peer_realized_error``
 and ``ego_only_error`` are receiver-observation errors already written to the
 ledger; GT is not read.  The script refuses constant-velocity probe rows and
 does not fit an attention/MLP/controller.  It reports simple rank correlation
-and harm AUC by held-out scene, source, receiver target, and horizon.
+and harm AUC by held-out scene, source, receiver target, and horizon.  The
+reported EWMA is an explicit exponential recursion, not a five-row rolling
+mean.
 """
 
 from __future__ import annotations
@@ -113,8 +115,26 @@ def _finite_float(value: Any, default: float = float("nan")) -> float:
     return result if math.isfinite(result) else default
 
 
-def _history_features(entries: Sequence[Tuple[float, float]]) -> Dict[str, float]:
-    """Summarize a strict-causal history without looking at the current row."""
+def _ewma(values: Sequence[float], alpha: float) -> float:
+    if not values:
+        return float("nan")
+    if not 0.0 < float(alpha) <= 1.0:
+        raise ValueError("ewma_alpha must be in (0, 1]")
+    value = float(values[0])
+    for current in values[1:]:
+        value = float(alpha) * float(current) + (1.0 - float(alpha)) * value
+    return value
+
+
+def _history_features(
+    entries: Sequence[Tuple[float, float]], ewma_alpha: float = 0.3
+) -> Dict[str, float]:
+    """Summarize a strict-causal history without looking at the current row.
+
+    ``ewma`` is a true exponential recursion over all available past entries;
+    the decay is explicit in ``ewma_alpha`` and is never fitted on the test
+    scene.
+    """
     ordered = sorted(entries, key=lambda item: item[0])
     if not ordered:
         return {
@@ -124,10 +144,9 @@ def _history_features(entries: Sequence[Tuple[float, float]]) -> Dict[str, float
             "available": 0.0,
         }
     values = [float(item[1]) for item in ordered]
-    tail = values[-5:]
     return {
         "latest": values[-1],
-        "ewma": float(np.mean(tail)),
+        "ewma": _ewma(values, ewma_alpha),
         "count": float(len(values)),
         "available": 1.0,
     }
@@ -289,6 +308,7 @@ def _short_to_long_harm(
     rows: Sequence[Mapping[str, Any]],
     short_horizons: Sequence[float] = (0.3, 0.5, 1.0),
     long_horizons: Sequence[float] = (2.0, 3.0, 5.0),
+    ewma_alpha: float = 0.3,
 ) -> Dict[str, Any]:
     """Evaluate short-horizon peer error as a causal predictor of long harm."""
     result: Dict[str, Any] = {
@@ -298,6 +318,7 @@ def _short_to_long_harm(
         ),
         "by_scene": {},
         "pooled": {},
+        "ewma_alpha": float(ewma_alpha),
     }
     eligible = [
         row for row in rows
@@ -367,7 +388,7 @@ def _short_to_long_harm(
                         "long_horizon": long_h,
                         "short_horizon": short_h,
                         "latest": values[-1],
-                        "ewma": float(np.mean(values[-5:])),
+                        "ewma": _ewma(values, ewma_alpha),
                         "harm": label,
                     }
                     all_pairs[(short_h, long_h)].append(pair)
@@ -539,7 +560,10 @@ def analyze(
     min_auc: float = 0.55,
     min_abs_rho: float = 0.10,
     eps: float = 0.10,
+    ewma_alpha: float = 0.3,
 ) -> Dict[str, Any]:
+    if not 0.0 < float(ewma_alpha) <= 1.0:
+        raise ValueError("ewma_alpha must be in (0, 1]")
     # ``read_jsonl`` is a streaming generator; materialize only the slim
     # metadata records, never the multimodal forecast arrays.
     if not isinstance(rows, Sequence):
@@ -574,7 +598,14 @@ def analyze(
     # Separate ego/peer streams are used by the requested A/B/C probe.  The
     # legacy ``histories_*`` maps above retain the peer-minus-ego descriptive
     # diagnostic for backwards-compatible output.
-    error_histories_target: MutableMapping[Tuple[str, str, str, str, float], Dict[str, List[Tuple[float, float]]]] = defaultdict(lambda: {"ego": [], "peer": []})
+    # Target-level ego history is deliberately source-independent: it is the
+    # receiver's difficulty signal for (scene, receiver, target, horizon).
+    # Peer history remains source-conditioned because source reliability is the
+    # quantity under test.  Ego rows are de-duplicated across peer sources at
+    # the same send time so one ego forecast cannot be counted multiple times.
+    error_histories_target_ego: MutableMapping[Tuple[str, str, str, float], List[Tuple[float, float]]] = defaultdict(list)
+    error_histories_target_peer: MutableMapping[Tuple[str, str, str, str, float], List[Tuple[float, float]]] = defaultdict(list)
+    target_ego_history_seen = set()
     error_histories_source: MutableMapping[Tuple[str, str, str, float], Dict[str, List[Tuple[float, float]]]] = defaultdict(lambda: {"ego": [], "peer": []})
     paired_target: MutableMapping[Tuple[str, str, str, str, float], List[Dict[str, Any]]] = defaultdict(list)
     paired_source: MutableMapping[Tuple[str, str, str, float], List[Dict[str, Any]]] = defaultdict(list)
@@ -608,10 +639,13 @@ def analyze(
                 h_diff = h_peer - h_ego
                 histories_target[(scene, h_receiver, h_source, h_target, h_horizon)].append((history_send, h_diff))
                 histories_source[(scene, h_receiver, h_source, h_horizon)].append((history_send, h_diff))
-                target_error_key = (scene, h_receiver, h_source, h_target, h_horizon)
+                target_ego_key = (scene, h_receiver, h_target, h_horizon)
+                target_peer_key = (scene, h_receiver, h_source, h_target, h_horizon)
+                if (target_ego_key, history_send) not in target_ego_history_seen:
+                    error_histories_target_ego[target_ego_key].append((history_send, h_ego))
+                    target_ego_history_seen.add((target_ego_key, history_send))
+                error_histories_target_peer[target_peer_key].append((history_send, h_peer))
                 source_error_key = (scene, h_receiver, h_source, h_horizon)
-                error_histories_target[target_error_key]["ego"].append((history_send, h_ego))
-                error_histories_target[target_error_key]["peer"].append((history_send, h_peer))
                 error_histories_source[source_error_key]["ego"].append((history_send, h_ego))
                 error_histories_source[source_error_key]["peer"].append((history_send, h_peer))
             pending = still_pending
@@ -630,7 +664,7 @@ def analyze(
                 current_diff = current_error - current_ego_error
                 if target_history:
                     latest = target_history[-1][1]
-                    target_ewma = sum(value for _, value in target_history[-5:]) / min(5, len(target_history))
+                    target_ewma = _history_features(target_history, ewma_alpha)["ewma"]
                     paired_target[target_key].append({
                         "sequence_id": scene, "receiver": receiver, "source": source,
                         "receiver_target_id": target, "horizon": horizon,
@@ -639,7 +673,7 @@ def analyze(
                     })
                 if source_history:
                     latest = source_history[-1][1]
-                    source_ewma = sum(value for _, value in source_history[-5:]) / min(5, len(source_history))
+                    source_ewma = _history_features(source_history, ewma_alpha)["ewma"]
                     paired_source[source_key].append({
                         "sequence_id": scene, "receiver": receiver, "source": source,
                         "receiver_target_id": target, "horizon": horizon,
@@ -652,11 +686,12 @@ def analyze(
                 # ego-only observation path and are available only for past,
                 # matured rows.  The current row contributes only its harm
                 # label for this offline diagnostic.
-                target_errors = error_histories_target[target_key]
+                target_ego_history = error_histories_target_ego[(scene, receiver, target, horizon)]
+                target_peer_history = error_histories_target_peer[target_key]
                 source_errors = error_histories_source[source_key]
                 def scope_record(scope_name: str, histories: Mapping[str, Sequence[Tuple[float, float]]]) -> Dict[str, float]:
-                    ego_features = _history_features(histories.get("ego", []))
-                    peer_features = _history_features(histories.get("peer", []))
+                    ego_features = _history_features(histories.get("ego", []), ewma_alpha)
+                    peer_features = _history_features(histories.get("peer", []), ewma_alpha)
                     return {
                         scope_name + "_ego_latest": ego_features["latest"],
                         scope_name + "_ego_ewma": ego_features["ewma"],
@@ -681,7 +716,12 @@ def analyze(
                     "meta_miss_count": _finite_float(row.get("miss_count")),
                     "meta_delay_s": _finite_float(row.get("arrival_time")) - _finite_float(row.get("send_time")),
                 }
-                causal.update(scope_record("target", target_errors))
+                causal.update(
+                    scope_record(
+                        "target",
+                        {"ego": target_ego_history, "peer": target_peer_history},
+                    )
+                )
                 causal.update(scope_record("source", source_errors))
                 causal_rows.append(causal)
 
@@ -735,7 +775,7 @@ def analyze(
     }
     horizons = sorted({round(float(row.get("horizon", 0.0)), 3) for row in causal_rows})
     harm_loso = _harm_loso(causal_rows, sorted(by_scene), horizons)
-    short_to_long_harm = _short_to_long_harm(mtr_rows)
+    short_to_long_harm = _short_to_long_harm(mtr_rows, ewma_alpha=ewma_alpha)
     stable_groups = [
         group
         for group in target_summaries + source_summaries
@@ -756,6 +796,7 @@ def analyze(
             "min_auc_for_harm": min_auc,
             "min_abs_spearman_regret": min_abs_rho,
             "harm_eps_m": eps,
+            "ewma_alpha": float(ewma_alpha),
         },
         "heldout_scene": scene_summary,
         "heldout_scene_evaluation": heldout_scene_evaluation,
@@ -763,7 +804,11 @@ def analyze(
         "short_to_long_harm": short_to_long_harm,
         "target_groups": target_summaries,
         "source_groups": source_summaries,
-        "interpretation": "all histories are strict causal receiver-observation prefixes; no GT or learned controller is used",
+        "interpretation": (
+            "all histories are strict causal receiver-observation prefixes; target-level ego history is "
+            "deduplicated across peer sources, peer history remains source-conditioned; no GT or learned "
+            "controller is used"
+        ),
     }
 
 
@@ -775,8 +820,16 @@ def main() -> None:
     parser.add_argument("--min-auc", type=float, default=0.55)
     parser.add_argument("--min-abs-rho", type=float, default=0.10)
     parser.add_argument("--eps", type=float, default=0.10)
+    parser.add_argument("--ewma-alpha", type=float, default=0.3)
     args = parser.parse_args()
-    result = analyze(read_jsonl(args.ledger), args.min_rows, args.min_auc, args.min_abs_rho, args.eps)
+    result = analyze(
+        read_jsonl(args.ledger),
+        args.min_rows,
+        args.min_auc,
+        args.min_abs_rho,
+        args.eps,
+        args.ewma_alpha,
+    )
     output = args.output or args.ledger.with_name("mtr_predictiveness.json")
     with output.open("w", encoding="utf-8") as handle:
         json.dump(result, handle, ensure_ascii=False, indent=2, sort_keys=True)
