@@ -1,0 +1,72 @@
+{
+  "config": {
+    "aggregate_mode": "mean_probe",
+    "association_gate_m": 4.0,
+    "frame_period_s": 0.1,
+    "horizons_s": [
+      0.1,
+      0.3,
+      0.5,
+      1.0,
+      2.0,
+      3.0,
+      5.0
+    ],
+    "min_score": 0.3,
+    "peer_delay_s": 0.1,
+    "target_gate_m": 4.0,
+    "target_max_miss": 2
+  },
+  "schema_version": "rvhca.cpu_replay.v0",
+  "summary": {
+    "association_events": 515,
+    "common_events": 205,
+    "harm_rate_eps_0.1m": 0.47026431718061673,
+    "horizon_coverage": {
+      "0.100": {
+        "coverage": 1.0,
+        "matured_rows": 205,
+        "rows": 205
+      },
+      "0.300": {
+        "coverage": 0.9317073170731708,
+        "matured_rows": 191,
+        "rows": 205
+      },
+      "0.500": {
+        "coverage": 0.8634146341463415,
+        "matured_rows": 177,
+        "rows": 205
+      },
+      "1.000": {
+        "coverage": 0.7121951219512195,
+        "matured_rows": 146,
+        "rows": 205
+      },
+      "2.000": {
+        "coverage": 0.5756097560975609,
+        "matured_rows": 118,
+        "rows": 205
+      },
+      "3.000": {
+        "coverage": 0.3463414634146341,
+        "matured_rows": 71,
+        "rows": 205
+      },
+      "5.000": {
+        "coverage": 0.0,
+        "matured_rows": 0,
+        "rows": 205
+      }
+    },
+    "ledger_hindsight_coverage": 0.6327526132404181,
+    "ledger_matured_rows": 908,
+    "ledger_rows": 1435,
+    "mean_aggregate_error": 1.7420169707062902,
+    "mean_ego_only_error": 1.584134770626479,
+    "mean_peer_realized_error": 2.3445573337210863,
+    "shared_only_events": 310,
+    "track_rows": 515,
+    "tracking_failures": []
+  }
+}

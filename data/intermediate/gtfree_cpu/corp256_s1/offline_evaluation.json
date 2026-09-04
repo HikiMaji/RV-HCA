@@ -1,0 +1,147 @@
+{
+  "association": {
+    "all_peer_opportunity_recall": 0.38710204081632654,
+    "association_precision": 0.9987363100252739,
+    "association_recall": 0.4982139104853961,
+    "common_evaluable_events": 2374,
+    "common_events": 2759,
+    "conditional_association_recall": 0.9987363100252739,
+    "conditional_definition": "correct common association / opportunities where peer and receiver local tracks both have independent offline GT matches",
+    "conditional_opportunities": 2374,
+    "correct_common_events": 2371,
+    "end_to_end_association_recall": 0.4982139104853961,
+    "end_to_end_definition": "correct common association / all raw-GT opportunities where the peer object is present in the receiver at packet arrival (receiver-visible opportunity; raw peer targets invisible at the receiver are reported separately)",
+    "end_to_end_opportunities": 4759,
+    "offline_common_candidate_denominator": 4759,
+    "peer_raw_opportunities": 6125,
+    "peer_track_misses_on_opportunity": 728,
+    "receiver_gt_unavailable_for_peer": 1274,
+    "receiver_invisible_opportunities": 1366,
+    "receiver_track_misses_on_opportunity": 732,
+    "receiver_visibility_rate": 0.7769795918367347,
+    "receiver_visible_opportunities": 4759,
+    "shared_only_definition": "peer forecast rows whose target is present in receiver raw GT at arrival; this is coverage only and is not a common-target recall",
+    "shared_only_events": 2847,
+    "shared_only_offline_hit_rate": 0.5753424657534246,
+    "shared_only_with_receiver_gt": 1638
+  },
+  "association_gate_m": 3.0,
+  "ledger": {
+    "common_rows": 19313,
+    "horizon": {
+      "0.100": {
+        "coverage": 1.0,
+        "matured_valid_rows": 2759,
+        "rows": 2759
+      },
+      "0.300": {
+        "coverage": 0.9503443276549475,
+        "matured_valid_rows": 2622,
+        "rows": 2759
+      },
+      "0.500": {
+        "coverage": 0.9061254077564335,
+        "matured_valid_rows": 2500,
+        "rows": 2759
+      },
+      "1.000": {
+        "coverage": 0.8104385646973541,
+        "matured_valid_rows": 2236,
+        "rows": 2759
+      },
+      "2.000": {
+        "coverage": 0.674519753533889,
+        "matured_valid_rows": 1861,
+        "rows": 2759
+      },
+      "3.000": {
+        "coverage": 0.5545487495469373,
+        "matured_valid_rows": 1530,
+        "rows": 2759
+      },
+      "5.000": {
+        "coverage": 0.40703153316418994,
+        "matured_valid_rows": 1123,
+        "rows": 2759
+      }
+    },
+    "matured_valid_rows": 14631,
+    "row_hindsight_coverage": 0.7575726194791074
+  },
+  "raw_root": "/root/autodl-tmp/RV-HCA/data/raw/OPV2V/test",
+  "replay_dir": "data/intermediate/gtfree_cpu/corp256_s1",
+  "schema_version": "rvhca.offline_eval.v1",
+  "track_survival": {
+    "1.0s": {
+      "definition": "matched start row -> exact frame t+h; same_gt additionally preserves offline GT match",
+      "denominator_matched_start_rows": 5071,
+      "horizon_s": 1.0,
+      "id_present_rate": 0.8296194044567147,
+      "same_gt_rows": 4139,
+      "same_gt_survival_rate": 0.8162098205482153,
+      "same_local_id_rows": 4207
+    },
+    "2.0s": {
+      "definition": "matched start row -> exact frame t+h; same_gt additionally preserves offline GT match",
+      "denominator_matched_start_rows": 4817,
+      "horizon_s": 2.0,
+      "id_present_rate": 0.7234793439900353,
+      "same_gt_rows": 3429,
+      "same_gt_survival_rate": 0.7118538509445713,
+      "same_local_id_rows": 3485
+    },
+    "3.0s": {
+      "definition": "matched start row -> exact frame t+h; same_gt additionally preserves offline GT match",
+      "denominator_matched_start_rows": 4570,
+      "horizon_s": 3.0,
+      "id_present_rate": 0.6266958424507658,
+      "same_gt_rows": 2817,
+      "same_gt_survival_rate": 0.6164113785557986,
+      "same_local_id_rows": 2864
+    },
+    "5.0s": {
+      "definition": "matched start row -> exact frame t+h; same_gt additionally preserves offline GT match",
+      "denominator_matched_start_rows": 4114,
+      "horizon_s": 5.0,
+      "id_present_rate": 0.517501215362178,
+      "same_gt_rows": 2091,
+      "same_gt_survival_rate": 0.5082644628099173,
+      "same_local_id_rows": 2129
+    }
+  },
+  "tracking": {
+    "gt_instances": 6125,
+    "id_switches": 109,
+    "id_switches_per_100_matched_rows": 2.054665409990575,
+    "matched_gt_instances": 5305,
+    "matched_track_rows": 5305,
+    "track_persistence_mean": 0.9996406109613657,
+    "track_persistence_median": 1.0,
+    "track_persistence_p10": 1.0,
+    "track_precision": 0.9463075276489475,
+    "track_recall": 0.8661224489795918,
+    "track_rows": 5606
+  },
+  "trajectory": {
+    "aggregate": {
+      "ADE": null,
+      "FDE": null,
+      "rows": 0
+    },
+    "cmp_aggregate": null,
+    "ego_only": {
+      "ADE": 4.030259642838363,
+      "FDE": 4.030259642838363,
+      "rows": 17094
+    },
+    "harm_rate_definition": "aggregate_gt_error > ego_only_gt_error + 0.1m",
+    "model_counts": {},
+    "peer": {
+      "ADE": 4.430929911681338,
+      "FDE": 4.430929911681338,
+      "rows": 17094
+    },
+    "probe_aggregate_harm_rate_eps_0.1m": null,
+    "rows_used": 17094
+  }
+}

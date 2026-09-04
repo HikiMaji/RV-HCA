@@ -1,0 +1,1217 @@
+{
+  "heldout_scene": {
+    "2021_08_22_09_08_29": {
+      "groups": 67,
+      "groups_with_min_rows": 22,
+      "stable_groups": 8
+    }
+  },
+  "input_rows": 49728,
+  "interpretation": "all histories are strict causal receiver-observation prefixes; no GT or learned controller is used",
+  "mtr_rows": 1001,
+  "paired_source_rows": 700,
+  "paired_target_rows": 635,
+  "source_groups": [
+    {
+      "auc_ewma_for_harm": 0.8521865889212829,
+      "auc_latest_for_harm": 0.8644314868804664,
+      "group": "source",
+      "harm_rate_eps": 0.5833333333333334,
+      "rows": 84,
+      "spearman_ewma_vs_current_peer_error": 0.7171135975255781,
+      "spearman_ewma_vs_current_regret": 0.7500392861050157,
+      "spearman_latest_vs_current_peer_error": 0.6438283675776205,
+      "spearman_latest_vs_current_regret": 0.7261172693641263,
+      "value": {
+        "horizon": 0.1,
+        "receiver": "5933",
+        "sequence_id": "2021_08_22_09_08_29",
+        "source": "5942"
+      }
+    },
+    {
+      "auc_ewma_for_harm": 0.7134046052631579,
+      "auc_latest_for_harm": 0.6525493421052632,
+      "group": "source",
+      "harm_rate_eps": 0.5428571428571428,
+      "rows": 70,
+      "spearman_ewma_vs_current_peer_error": 0.46586158450581644,
+      "spearman_ewma_vs_current_regret": 0.5128730514623714,
+      "spearman_latest_vs_current_peer_error": 0.30329922222268824,
+      "spearman_latest_vs_current_regret": 0.31264550790950896,
+      "value": {
+        "horizon": 0.3,
+        "receiver": "5933",
+        "sequence_id": "2021_08_22_09_08_29",
+        "source": "5942"
+      }
+    },
+    {
+      "auc_ewma_for_harm": 0.7051724137931035,
+      "auc_latest_for_harm": 0.5327586206896552,
+      "group": "source",
+      "harm_rate_eps": 0.4915254237288136,
+      "rows": 59,
+      "spearman_ewma_vs_current_peer_error": 0.24955042808062844,
+      "spearman_ewma_vs_current_regret": 0.32509112370142573,
+      "spearman_latest_vs_current_peer_error": 0.15473705788991038,
+      "spearman_latest_vs_current_regret": 0.07416616496103057,
+      "value": {
+        "horizon": 0.5,
+        "receiver": "5933",
+        "sequence_id": "2021_08_22_09_08_29",
+        "source": "5942"
+      }
+    },
+    {
+      "auc_ewma_for_harm": 0.30745341614906835,
+      "auc_latest_for_harm": 0.4026915113871636,
+      "group": "source",
+      "harm_rate_eps": 0.5227272727272727,
+      "rows": 44,
+      "spearman_ewma_vs_current_peer_error": -0.06675161173788018,
+      "spearman_ewma_vs_current_regret": -0.25598713326780714,
+      "spearman_latest_vs_current_peer_error": -0.02592364180719791,
+      "spearman_latest_vs_current_regret": -0.09592453834925002,
+      "value": {
+        "horizon": 1.0,
+        "receiver": "5933",
+        "sequence_id": "2021_08_22_09_08_29",
+        "source": "5942"
+      }
+    },
+    {
+      "auc_ewma_for_harm": 0.5364583333333334,
+      "auc_latest_for_harm": 0.3072916666666667,
+      "group": "source",
+      "harm_rate_eps": 0.7272727272727273,
+      "rows": 22,
+      "spearman_ewma_vs_current_peer_error": 0.12386323202532956,
+      "spearman_ewma_vs_current_regret": 0.10386047405850615,
+      "spearman_latest_vs_current_peer_error": -0.39313112773256775,
+      "spearman_latest_vs_current_regret": -0.3915924540428121,
+      "value": {
+        "horizon": 2.0,
+        "receiver": "5933",
+        "sequence_id": "2021_08_22_09_08_29",
+        "source": "5942"
+      }
+    },
+    {
+      "auc_ewma_for_harm": 0.5,
+      "auc_latest_for_harm": 0.5,
+      "group": "source",
+      "harm_rate_eps": 0.7619047619047619,
+      "rows": 21,
+      "spearman_ewma_vs_current_peer_error": null,
+      "spearman_ewma_vs_current_regret": null,
+      "spearman_latest_vs_current_peer_error": null,
+      "spearman_latest_vs_current_regret": null,
+      "value": {
+        "horizon": 3.0,
+        "receiver": "5933",
+        "sequence_id": "2021_08_22_09_08_29",
+        "source": "5942"
+      }
+    },
+    {
+      "auc_ewma_for_harm": 0.5,
+      "auc_latest_for_harm": 0.5,
+      "group": "source",
+      "harm_rate_eps": 0.9,
+      "rows": 20,
+      "spearman_ewma_vs_current_peer_error": null,
+      "spearman_ewma_vs_current_regret": null,
+      "spearman_latest_vs_current_peer_error": null,
+      "spearman_latest_vs_current_regret": null,
+      "value": {
+        "horizon": 5.0,
+        "receiver": "5933",
+        "sequence_id": "2021_08_22_09_08_29",
+        "source": "5942"
+      }
+    },
+    {
+      "auc_ewma_for_harm": 0.6047345767575323,
+      "auc_latest_for_harm": 0.7113821138211383,
+      "group": "source",
+      "harm_rate_eps": 0.44565217391304346,
+      "rows": 92,
+      "spearman_ewma_vs_current_peer_error": 0.19285690114805049,
+      "spearman_ewma_vs_current_regret": 0.15081687161721644,
+      "spearman_latest_vs_current_peer_error": 0.328982115947194,
+      "spearman_latest_vs_current_regret": 0.31535417824816314,
+      "value": {
+        "horizon": 0.1,
+        "receiver": "5942",
+        "sequence_id": "2021_08_22_09_08_29",
+        "source": "5933"
+      }
+    },
+    {
+      "auc_ewma_for_harm": 0.4985224586288416,
+      "auc_latest_for_harm": 0.585401891252955,
+      "group": "source",
+      "harm_rate_eps": 0.43373493975903615,
+      "rows": 83,
+      "spearman_ewma_vs_current_peer_error": 0.18608997765459012,
+      "spearman_ewma_vs_current_regret": 0.03847567235157806,
+      "spearman_latest_vs_current_peer_error": 0.10315469482308487,
+      "spearman_latest_vs_current_regret": 0.05004461939971967,
+      "value": {
+        "horizon": 0.3,
+        "receiver": "5942",
+        "sequence_id": "2021_08_22_09_08_29",
+        "source": "5933"
+      }
+    },
+    {
+      "auc_ewma_for_harm": 0.5218253968253969,
+      "auc_latest_for_harm": 0.5845238095238096,
+      "group": "source",
+      "harm_rate_eps": 0.3835616438356164,
+      "rows": 73,
+      "spearman_ewma_vs_current_peer_error": 0.013135353369968641,
+      "spearman_ewma_vs_current_regret": 0.06945839032298341,
+      "spearman_latest_vs_current_peer_error": 0.012950130995774018,
+      "spearman_latest_vs_current_regret": 0.0934755581768861,
+      "value": {
+        "horizon": 0.5,
+        "receiver": "5942",
+        "sequence_id": "2021_08_22_09_08_29",
+        "source": "5933"
+      }
+    },
+    {
+      "auc_ewma_for_harm": 0.6496394230769231,
+      "auc_latest_for_harm": 0.6099759615384616,
+      "group": "source",
+      "harm_rate_eps": 0.4482758620689655,
+      "rows": 58,
+      "spearman_ewma_vs_current_peer_error": 0.026201012233041616,
+      "spearman_ewma_vs_current_regret": 0.07326407896494792,
+      "spearman_latest_vs_current_peer_error": 0.22408191969860444,
+      "spearman_latest_vs_current_regret": 0.056413958023557205,
+      "value": {
+        "horizon": 1.0,
+        "receiver": "5942",
+        "sequence_id": "2021_08_22_09_08_29",
+        "source": "5933"
+      }
+    },
+    {
+      "auc_ewma_for_harm": 0.6278409090909091,
+      "auc_latest_for_harm": 0.4630681818181818,
+      "group": "source",
+      "harm_rate_eps": 0.5789473684210527,
+      "rows": 38,
+      "spearman_ewma_vs_current_peer_error": -0.47463087139209015,
+      "spearman_ewma_vs_current_regret": 0.22823020687276313,
+      "spearman_latest_vs_current_peer_error": -0.33991486692966805,
+      "spearman_latest_vs_current_regret": -0.012036481498360736,
+      "value": {
+        "horizon": 2.0,
+        "receiver": "5942",
+        "sequence_id": "2021_08_22_09_08_29",
+        "source": "5933"
+      }
+    },
+    {
+      "auc_ewma_for_harm": 0.6666666666666666,
+      "auc_latest_for_harm": 0.4444444444444444,
+      "group": "source",
+      "harm_rate_eps": 0.625,
+      "rows": 24,
+      "spearman_ewma_vs_current_peer_error": 0.15550372759311054,
+      "spearman_ewma_vs_current_regret": 0.34161842518486485,
+      "spearman_latest_vs_current_peer_error": 0.05509974599755885,
+      "spearman_latest_vs_current_regret": -0.018366581999186286,
+      "value": {
+        "horizon": 3.0,
+        "receiver": "5942",
+        "sequence_id": "2021_08_22_09_08_29",
+        "source": "5933"
+      }
+    },
+    {
+      "auc_ewma_for_harm": 0.6571428571428571,
+      "auc_latest_for_harm": 0.4857142857142857,
+      "group": "source",
+      "harm_rate_eps": 0.5833333333333334,
+      "rows": 12,
+      "spearman_ewma_vs_current_peer_error": -0.7106115081357967,
+      "spearman_ewma_vs_current_regret": 0.029004551352481492,
+      "spearman_latest_vs_current_peer_error": -0.7831228865170003,
+      "spearman_latest_vs_current_regret": -0.30454778920105563,
+      "value": {
+        "horizon": 5.0,
+        "receiver": "5942",
+        "sequence_id": "2021_08_22_09_08_29",
+        "source": "5933"
+      }
+    }
+  ],
+  "status": "SIGNAL_EXISTS_NO_CONTROLLER_TRAINED",
+  "target_groups": [
+    {
+      "auc_ewma_for_harm": null,
+      "auc_latest_for_harm": null,
+      "group": "target",
+      "harm_rate_eps": 1.0,
+      "rows": 5,
+      "spearman_ewma_vs_current_peer_error": 0.3,
+      "spearman_ewma_vs_current_regret": -0.6,
+      "spearman_latest_vs_current_peer_error": 0.49999999999999994,
+      "spearman_latest_vs_current_regret": -0.3,
+      "value": {
+        "horizon": 0.1,
+        "receiver": "5933",
+        "receiver_target_id": "1",
+        "sequence_id": "2021_08_22_09_08_29",
+        "source": "5942"
+      }
+    },
+    {
+      "auc_ewma_for_harm": null,
+      "auc_latest_for_harm": null,
+      "group": "target",
+      "harm_rate_eps": 1.0,
+      "rows": 1,
+      "spearman_ewma_vs_current_peer_error": null,
+      "spearman_ewma_vs_current_regret": null,
+      "spearman_latest_vs_current_peer_error": null,
+      "spearman_latest_vs_current_regret": null,
+      "value": {
+        "horizon": 0.3,
+        "receiver": "5933",
+        "receiver_target_id": "1",
+        "sequence_id": "2021_08_22_09_08_29",
+        "source": "5942"
+      }
+    },
+    {
+      "auc_ewma_for_harm": 0.4583333333333333,
+      "auc_latest_for_harm": 0.5,
+      "group": "target",
+      "harm_rate_eps": 0.6666666666666666,
+      "rows": 18,
+      "spearman_ewma_vs_current_peer_error": -0.034055727554179564,
+      "spearman_ewma_vs_current_regret": -0.09184726522187822,
+      "spearman_latest_vs_current_peer_error": -0.12693498452012383,
+      "spearman_latest_vs_current_regret": -0.06707946336429307,
+      "value": {
+        "horizon": 0.1,
+        "receiver": "5933",
+        "receiver_target_id": "10",
+        "sequence_id": "2021_08_22_09_08_29",
+        "source": "5942"
+      }
+    },
+    {
+      "auc_ewma_for_harm": 0.20833333333333334,
+      "auc_latest_for_harm": 0.09166666666666666,
+      "group": "target",
+      "harm_rate_eps": 0.7058823529411765,
+      "rows": 17,
+      "spearman_ewma_vs_current_peer_error": -0.2219524303340527,
+      "spearman_ewma_vs_current_regret": -0.21702015410440711,
+      "spearman_latest_vs_current_peer_error": -0.39951437460129485,
+      "spearman_latest_vs_current_regret": -0.46856624181633355,
+      "value": {
+        "horizon": 0.3,
+        "receiver": "5933",
+        "receiver_target_id": "10",
+        "sequence_id": "2021_08_22_09_08_29",
+        "source": "5942"
+      }
+    },
+    {
+      "auc_ewma_for_harm": 0.21666666666666667,
+      "auc_latest_for_harm": 0.3,
+      "group": "target",
+      "harm_rate_eps": 0.7058823529411765,
+      "rows": 17,
+      "spearman_ewma_vs_current_peer_error": -0.4737371429547378,
+      "spearman_ewma_vs_current_regret": -0.5702162477862509,
+      "spearman_latest_vs_current_peer_error": -0.27583128689009534,
+      "spearman_latest_vs_current_regret": -0.2733574636892873,
+      "value": {
+        "horizon": 0.5,
+        "receiver": "5933",
+        "receiver_target_id": "10",
+        "sequence_id": "2021_08_22_09_08_29",
+        "source": "5942"
+      }
+    },
+    {
+      "auc_ewma_for_harm": 0.5333333333333333,
+      "auc_latest_for_harm": 0.43333333333333335,
+      "group": "target",
+      "harm_rate_eps": 0.7058823529411765,
+      "rows": 17,
+      "spearman_ewma_vs_current_peer_error": -0.1375047745542317,
+      "spearman_ewma_vs_current_regret": -0.21389631597324932,
+      "spearman_latest_vs_current_peer_error": -0.36158662938335,
+      "spearman_latest_vs_current_regret": -0.3946896306649243,
+      "value": {
+        "horizon": 1.0,
+        "receiver": "5933",
+        "receiver_target_id": "10",
+        "sequence_id": "2021_08_22_09_08_29",
+        "source": "5942"
+      }
+    },
+    {
+      "auc_ewma_for_harm": 0.5961538461538461,
+      "auc_latest_for_harm": 0.5961538461538461,
+      "group": "target",
+      "harm_rate_eps": 0.7647058823529411,
+      "rows": 17,
+      "spearman_ewma_vs_current_peer_error": 0.03500700210070025,
+      "spearman_ewma_vs_current_regret": 0.17503501050350123,
+      "spearman_latest_vs_current_peer_error": 0.03500700210070025,
+      "spearman_latest_vs_current_regret": 0.17503501050350123,
+      "value": {
+        "horizon": 2.0,
+        "receiver": "5933",
+        "receiver_target_id": "10",
+        "sequence_id": "2021_08_22_09_08_29",
+        "source": "5942"
+      }
+    },
+    {
+      "auc_ewma_for_harm": 0.5,
+      "auc_latest_for_harm": 0.5,
+      "group": "target",
+      "harm_rate_eps": 0.7647058823529411,
+      "rows": 17,
+      "spearman_ewma_vs_current_peer_error": null,
+      "spearman_ewma_vs_current_regret": null,
+      "spearman_latest_vs_current_peer_error": null,
+      "spearman_latest_vs_current_regret": null,
+      "value": {
+        "horizon": 3.0,
+        "receiver": "5933",
+        "receiver_target_id": "10",
+        "sequence_id": "2021_08_22_09_08_29",
+        "source": "5942"
+      }
+    },
+    {
+      "auc_ewma_for_harm": 0.5,
+      "auc_latest_for_harm": 0.5,
+      "group": "target",
+      "harm_rate_eps": 0.9375,
+      "rows": 16,
+      "spearman_ewma_vs_current_peer_error": null,
+      "spearman_ewma_vs_current_regret": null,
+      "spearman_latest_vs_current_peer_error": null,
+      "spearman_latest_vs_current_regret": null,
+      "value": {
+        "horizon": 5.0,
+        "receiver": "5933",
+        "receiver_target_id": "10",
+        "sequence_id": "2021_08_22_09_08_29",
+        "source": "5942"
+      }
+    },
+    {
+      "auc_ewma_for_harm": 0.5,
+      "auc_latest_for_harm": 0.5,
+      "group": "target",
+      "harm_rate_eps": 0.6666666666666666,
+      "rows": 3,
+      "spearman_ewma_vs_current_peer_error": -0.5,
+      "spearman_ewma_vs_current_regret": 0.5,
+      "spearman_latest_vs_current_peer_error": -0.5,
+      "spearman_latest_vs_current_regret": 0.5,
+      "value": {
+        "horizon": 0.1,
+        "receiver": "5933",
+        "receiver_target_id": "11",
+        "sequence_id": "2021_08_22_09_08_29",
+        "source": "5942"
+      }
+    },
+    {
+      "auc_ewma_for_harm": 0.75,
+      "auc_latest_for_harm": 0.75,
+      "group": "target",
+      "harm_rate_eps": 0.3333333333333333,
+      "rows": 3,
+      "spearman_ewma_vs_current_peer_error": 0.8660254037844387,
+      "spearman_ewma_vs_current_regret": 0.0,
+      "spearman_latest_vs_current_peer_error": 0.8660254037844387,
+      "spearman_latest_vs_current_regret": 0.0,
+      "value": {
+        "horizon": 0.3,
+        "receiver": "5933",
+        "receiver_target_id": "11",
+        "sequence_id": "2021_08_22_09_08_29",
+        "source": "5942"
+      }
+    },
+    {
+      "auc_ewma_for_harm": 0.5,
+      "auc_latest_for_harm": 0.5,
+      "group": "target",
+      "harm_rate_eps": 0.3333333333333333,
+      "rows": 3,
+      "spearman_ewma_vs_current_peer_error": null,
+      "spearman_ewma_vs_current_regret": null,
+      "spearman_latest_vs_current_peer_error": null,
+      "spearman_latest_vs_current_regret": null,
+      "value": {
+        "horizon": 0.5,
+        "receiver": "5933",
+        "receiver_target_id": "11",
+        "sequence_id": "2021_08_22_09_08_29",
+        "source": "5942"
+      }
+    },
+    {
+      "auc_ewma_for_harm": 0.1875,
+      "auc_latest_for_harm": 0.625,
+      "group": "target",
+      "harm_rate_eps": 0.2,
+      "rows": 10,
+      "spearman_ewma_vs_current_peer_error": 0.17575757575757575,
+      "spearman_ewma_vs_current_regret": -0.43030303030303024,
+      "spearman_latest_vs_current_peer_error": 0.4787878787878787,
+      "spearman_latest_vs_current_regret": 0.4545454545454545,
+      "value": {
+        "horizon": 0.1,
+        "receiver": "5933",
+        "receiver_target_id": "16",
+        "sequence_id": "2021_08_22_09_08_29",
+        "source": "5942"
+      }
+    },
+    {
+      "auc_ewma_for_harm": 0.08333333333333333,
+      "auc_latest_for_harm": 0.08333333333333333,
+      "group": "target",
+      "harm_rate_eps": 0.25,
+      "rows": 8,
+      "spearman_ewma_vs_current_peer_error": -0.21688321172034594,
+      "spearman_ewma_vs_current_regret": -0.7470421737034139,
+      "spearman_latest_vs_current_peer_error": -0.21688321172034594,
+      "spearman_latest_vs_current_regret": -0.168686942449158,
+      "value": {
+        "horizon": 0.3,
+        "receiver": "5933",
+        "receiver_target_id": "16",
+        "sequence_id": "2021_08_22_09_08_29",
+        "source": "5942"
+      }
+    },
+    {
+      "auc_ewma_for_harm": 0.0,
+      "auc_latest_for_harm": 0.0,
+      "group": "target",
+      "harm_rate_eps": 0.25,
+      "rows": 4,
+      "spearman_ewma_vs_current_peer_error": -0.7745966692414834,
+      "spearman_ewma_vs_current_regret": -0.7745966692414834,
+      "spearman_latest_vs_current_peer_error": -0.7745966692414834,
+      "spearman_latest_vs_current_regret": -0.7745966692414834,
+      "value": {
+        "horizon": 0.5,
+        "receiver": "5933",
+        "receiver_target_id": "16",
+        "sequence_id": "2021_08_22_09_08_29",
+        "source": "5942"
+      }
+    },
+    {
+      "auc_ewma_for_harm": null,
+      "auc_latest_for_harm": null,
+      "group": "target",
+      "harm_rate_eps": 1.0,
+      "rows": 1,
+      "spearman_ewma_vs_current_peer_error": null,
+      "spearman_ewma_vs_current_regret": null,
+      "spearman_latest_vs_current_peer_error": null,
+      "spearman_latest_vs_current_regret": null,
+      "value": {
+        "horizon": 1.0,
+        "receiver": "5933",
+        "receiver_target_id": "16",
+        "sequence_id": "2021_08_22_09_08_29",
+        "source": "5942"
+      }
+    },
+    {
+      "auc_ewma_for_harm": 0.0,
+      "auc_latest_for_harm": 0.8,
+      "group": "target",
+      "harm_rate_eps": 0.8333333333333334,
+      "rows": 6,
+      "spearman_ewma_vs_current_peer_error": -0.8285714285714287,
+      "spearman_ewma_vs_current_regret": -0.6,
+      "spearman_latest_vs_current_peer_error": 0.08571428571428573,
+      "spearman_latest_vs_current_regret": 0.48571428571428577,
+      "value": {
+        "horizon": 0.1,
+        "receiver": "5933",
+        "receiver_target_id": "2",
+        "sequence_id": "2021_08_22_09_08_29",
+        "source": "5942"
+      }
+    },
+    {
+      "auc_ewma_for_harm": 0.0,
+      "auc_latest_for_harm": 0.0,
+      "group": "target",
+      "harm_rate_eps": 0.75,
+      "rows": 4,
+      "spearman_ewma_vs_current_peer_error": 0.39999999999999997,
+      "spearman_ewma_vs_current_regret": -0.39999999999999997,
+      "spearman_latest_vs_current_peer_error": 0.39999999999999997,
+      "spearman_latest_vs_current_regret": -0.39999999999999997,
+      "value": {
+        "horizon": 0.3,
+        "receiver": "5933",
+        "receiver_target_id": "2",
+        "sequence_id": "2021_08_22_09_08_29",
+        "source": "5942"
+      }
+    },
+    {
+      "auc_ewma_for_harm": 0.0,
+      "auc_latest_for_harm": 0.0,
+      "group": "target",
+      "harm_rate_eps": 0.5,
+      "rows": 2,
+      "spearman_ewma_vs_current_peer_error": null,
+      "spearman_ewma_vs_current_regret": null,
+      "spearman_latest_vs_current_peer_error": null,
+      "spearman_latest_vs_current_regret": null,
+      "value": {
+        "horizon": 0.5,
+        "receiver": "5933",
+        "receiver_target_id": "2",
+        "sequence_id": "2021_08_22_09_08_29",
+        "source": "5942"
+      }
+    },
+    {
+      "auc_ewma_for_harm": null,
+      "auc_latest_for_harm": null,
+      "group": "target",
+      "harm_rate_eps": 0.0,
+      "rows": 3,
+      "spearman_ewma_vs_current_peer_error": 0.5,
+      "spearman_ewma_vs_current_regret": -0.5,
+      "spearman_latest_vs_current_peer_error": 0.5,
+      "spearman_latest_vs_current_regret": -0.5,
+      "value": {
+        "horizon": 0.1,
+        "receiver": "5933",
+        "receiver_target_id": "22",
+        "sequence_id": "2021_08_22_09_08_29",
+        "source": "5942"
+      }
+    },
+    {
+      "auc_ewma_for_harm": null,
+      "auc_latest_for_harm": null,
+      "group": "target",
+      "harm_rate_eps": 0.0,
+      "rows": 2,
+      "spearman_ewma_vs_current_peer_error": null,
+      "spearman_ewma_vs_current_regret": null,
+      "spearman_latest_vs_current_peer_error": null,
+      "spearman_latest_vs_current_regret": null,
+      "value": {
+        "horizon": 0.3,
+        "receiver": "5933",
+        "receiver_target_id": "22",
+        "sequence_id": "2021_08_22_09_08_29",
+        "source": "5942"
+      }
+    },
+    {
+      "auc_ewma_for_harm": 0.8739495798319328,
+      "auc_latest_for_harm": 0.9495798319327731,
+      "group": "target",
+      "harm_rate_eps": 0.5483870967741935,
+      "rows": 31,
+      "spearman_ewma_vs_current_peer_error": 0.8471774193548388,
+      "spearman_ewma_vs_current_regret": 0.7540322580645162,
+      "spearman_latest_vs_current_peer_error": 0.7370967741935484,
+      "spearman_latest_vs_current_regret": 0.8217741935483872,
+      "value": {
+        "horizon": 0.1,
+        "receiver": "5933",
+        "receiver_target_id": "4",
+        "sequence_id": "2021_08_22_09_08_29",
+        "source": "5942"
+      }
+    },
+    {
+      "auc_ewma_for_harm": 0.6978609625668449,
+      "auc_latest_for_harm": 0.7727272727272727,
+      "group": "target",
+      "harm_rate_eps": 0.6071428571428571,
+      "rows": 28,
+      "spearman_ewma_vs_current_peer_error": 0.7977545345004863,
+      "spearman_ewma_vs_current_regret": 0.499520861973528,
+      "spearman_latest_vs_current_peer_error": 0.5841436395775961,
+      "spearman_latest_vs_current_regret": 0.520334231222425,
+      "value": {
+        "horizon": 0.3,
+        "receiver": "5933",
+        "receiver_target_id": "4",
+        "sequence_id": "2021_08_22_09_08_29",
+        "source": "5942"
+      }
+    },
+    {
+      "auc_ewma_for_harm": 0.7083333333333334,
+      "auc_latest_for_harm": 0.7291666666666666,
+      "group": "target",
+      "harm_rate_eps": 0.5,
+      "rows": 24,
+      "spearman_ewma_vs_current_peer_error": 0.38171948605227984,
+      "spearman_ewma_vs_current_regret": 0.4235040592119364,
+      "spearman_latest_vs_current_peer_error": 0.41741047562615313,
+      "spearman_latest_vs_current_regret": 0.4026117726321082,
+      "value": {
+        "horizon": 0.5,
+        "receiver": "5933",
+        "receiver_target_id": "4",
+        "sequence_id": "2021_08_22_09_08_29",
+        "source": "5942"
+      }
+    },
+    {
+      "auc_ewma_for_harm": 0.6,
+      "auc_latest_for_harm": 0.65,
+      "group": "target",
+      "harm_rate_eps": 0.375,
+      "rows": 16,
+      "spearman_ewma_vs_current_peer_error": -0.4188808785243331,
+      "spearman_ewma_vs_current_regret": 0.11504474832710557,
+      "spearman_latest_vs_current_peer_error": 0.24188895802109375,
+      "spearman_latest_vs_current_regret": 0.44837953194153957,
+      "value": {
+        "horizon": 1.0,
+        "receiver": "5933",
+        "receiver_target_id": "4",
+        "sequence_id": "2021_08_22_09_08_29",
+        "source": "5942"
+      }
+    },
+    {
+      "auc_ewma_for_harm": null,
+      "auc_latest_for_harm": null,
+      "group": "target",
+      "harm_rate_eps": 1.0,
+      "rows": 5,
+      "spearman_ewma_vs_current_peer_error": -0.7999999999999999,
+      "spearman_ewma_vs_current_regret": -0.19999999999999998,
+      "spearman_latest_vs_current_peer_error": -0.9999999999999999,
+      "spearman_latest_vs_current_regret": 0.19999999999999998,
+      "value": {
+        "horizon": 0.1,
+        "receiver": "5933",
+        "receiver_target_id": "6",
+        "sequence_id": "2021_08_22_09_08_29",
+        "source": "5942"
+      }
+    },
+    {
+      "auc_ewma_for_harm": null,
+      "auc_latest_for_harm": null,
+      "group": "target",
+      "harm_rate_eps": 1.0,
+      "rows": 1,
+      "spearman_ewma_vs_current_peer_error": null,
+      "spearman_ewma_vs_current_regret": null,
+      "spearman_latest_vs_current_peer_error": null,
+      "spearman_latest_vs_current_regret": null,
+      "value": {
+        "horizon": 0.3,
+        "receiver": "5933",
+        "receiver_target_id": "6",
+        "sequence_id": "2021_08_22_09_08_29",
+        "source": "5942"
+      }
+    },
+    {
+      "auc_ewma_for_harm": 0.8041958041958042,
+      "auc_latest_for_harm": 0.9300699300699301,
+      "group": "target",
+      "harm_rate_eps": 0.4583333333333333,
+      "rows": 48,
+      "spearman_ewma_vs_current_peer_error": 0.6336300477637863,
+      "spearman_ewma_vs_current_regret": 0.6652192792010421,
+      "spearman_latest_vs_current_peer_error": 0.7440295267042988,
+      "spearman_latest_vs_current_regret": 0.8199088145896657,
+      "value": {
+        "horizon": 0.1,
+        "receiver": "5942",
+        "receiver_target_id": "1",
+        "sequence_id": "2021_08_22_09_08_29",
+        "source": "5933"
+      }
+    },
+    {
+      "auc_ewma_for_harm": 0.5994152046783626,
+      "auc_latest_for_harm": 0.6812865497076024,
+      "group": "target",
+      "harm_rate_eps": 0.41304347826086957,
+      "rows": 46,
+      "spearman_ewma_vs_current_peer_error": 0.46113990426841867,
+      "spearman_ewma_vs_current_regret": 0.33105107894711117,
+      "spearman_latest_vs_current_peer_error": 0.43942759202892123,
+      "spearman_latest_vs_current_regret": 0.36621022092584293,
+      "value": {
+        "horizon": 0.3,
+        "receiver": "5942",
+        "receiver_target_id": "1",
+        "sequence_id": "2021_08_22_09_08_29",
+        "source": "5933"
+      }
+    },
+    {
+      "auc_ewma_for_harm": 0.5684210526315789,
+      "auc_latest_for_harm": 0.511578947368421,
+      "group": "target",
+      "harm_rate_eps": 0.4318181818181818,
+      "rows": 44,
+      "spearman_ewma_vs_current_peer_error": 0.25511364759073185,
+      "spearman_ewma_vs_current_regret": 0.15100865896924434,
+      "spearman_latest_vs_current_peer_error": 0.1807730933854149,
+      "spearman_latest_vs_current_regret": 0.0899280897644963,
+      "value": {
+        "horizon": 0.5,
+        "receiver": "5942",
+        "receiver_target_id": "1",
+        "sequence_id": "2021_08_22_09_08_29",
+        "source": "5933"
+      }
+    },
+    {
+      "auc_ewma_for_harm": 0.6553884711779449,
+      "auc_latest_for_harm": 0.5426065162907269,
+      "group": "target",
+      "harm_rate_eps": 0.475,
+      "rows": 40,
+      "spearman_ewma_vs_current_peer_error": 0.10851124856444189,
+      "spearman_ewma_vs_current_regret": 0.06414597245866746,
+      "spearman_latest_vs_current_peer_error": 0.28126266337970784,
+      "spearman_latest_vs_current_regret": 0.02213554115680889,
+      "value": {
+        "horizon": 1.0,
+        "receiver": "5942",
+        "receiver_target_id": "1",
+        "sequence_id": "2021_08_22_09_08_29",
+        "source": "5933"
+      }
+    },
+    {
+      "auc_ewma_for_harm": 0.3574660633484163,
+      "auc_latest_for_harm": 0.40271493212669685,
+      "group": "target",
+      "harm_rate_eps": 0.5666666666666667,
+      "rows": 30,
+      "spearman_ewma_vs_current_peer_error": 0.3597827858178506,
+      "spearman_ewma_vs_current_regret": -0.2680182266170812,
+      "spearman_latest_vs_current_peer_error": 0.33772174089490353,
+      "spearman_latest_vs_current_regret": -0.2614468515336501,
+      "value": {
+        "horizon": 2.0,
+        "receiver": "5942",
+        "receiver_target_id": "1",
+        "sequence_id": "2021_08_22_09_08_29",
+        "source": "5933"
+      }
+    },
+    {
+      "auc_ewma_for_harm": 0.2222222222222222,
+      "auc_latest_for_harm": 0.2222222222222222,
+      "group": "target",
+      "harm_rate_eps": 0.55,
+      "rows": 20,
+      "spearman_ewma_vs_current_peer_error": -0.08893471678278102,
+      "spearman_ewma_vs_current_regret": -0.46048420023084385,
+      "spearman_latest_vs_current_peer_error": -0.09091104382239838,
+      "spearman_latest_vs_current_regret": -0.45850787319122654,
+      "value": {
+        "horizon": 3.0,
+        "receiver": "5942",
+        "receiver_target_id": "1",
+        "sequence_id": "2021_08_22_09_08_29",
+        "source": "5933"
+      }
+    },
+    {
+      "auc_ewma_for_harm": 0.7083333333333334,
+      "auc_latest_for_harm": 0.4583333333333333,
+      "group": "target",
+      "harm_rate_eps": 0.6,
+      "rows": 10,
+      "spearman_ewma_vs_current_peer_error": -0.5583242384172624,
+      "spearman_ewma_vs_current_regret": 0.1533857797849622,
+      "spearman_latest_vs_current_peer_error": -0.6810328622452321,
+      "spearman_latest_vs_current_regret": -0.2883652659957289,
+      "value": {
+        "horizon": 5.0,
+        "receiver": "5942",
+        "receiver_target_id": "1",
+        "sequence_id": "2021_08_22_09_08_29",
+        "source": "5933"
+      }
+    },
+    {
+      "auc_ewma_for_harm": 0.5,
+      "auc_latest_for_harm": 0.8461538461538461,
+      "group": "target",
+      "harm_rate_eps": 0.13333333333333333,
+      "rows": 15,
+      "spearman_ewma_vs_current_peer_error": 0.2571428571428571,
+      "spearman_ewma_vs_current_regret": 0.06071428571428571,
+      "spearman_latest_vs_current_peer_error": 0.7499999999999999,
+      "spearman_latest_vs_current_regret": 0.4357142857142856,
+      "value": {
+        "horizon": 0.1,
+        "receiver": "5942",
+        "receiver_target_id": "11",
+        "sequence_id": "2021_08_22_09_08_29",
+        "source": "5933"
+      }
+    },
+    {
+      "auc_ewma_for_harm": 0.022727272727272728,
+      "auc_latest_for_harm": 0.29545454545454547,
+      "group": "target",
+      "harm_rate_eps": 0.15384615384615385,
+      "rows": 13,
+      "spearman_ewma_vs_current_peer_error": -0.5283667151868545,
+      "spearman_ewma_vs_current_regret": -0.3347244635476932,
+      "spearman_latest_vs_current_peer_error": -0.6832805164981837,
+      "spearman_latest_vs_current_regret": -0.5781604370369247,
+      "value": {
+        "horizon": 0.3,
+        "receiver": "5942",
+        "receiver_target_id": "11",
+        "sequence_id": "2021_08_22_09_08_29",
+        "source": "5933"
+      }
+    },
+    {
+      "auc_ewma_for_harm": 0.0,
+      "auc_latest_for_harm": 0.0,
+      "group": "target",
+      "harm_rate_eps": 0.18181818181818182,
+      "rows": 11,
+      "spearman_ewma_vs_current_peer_error": -0.6055300708194984,
+      "spearman_ewma_vs_current_regret": -0.37616261975150656,
+      "spearman_latest_vs_current_peer_error": -0.8073734277593312,
+      "spearman_latest_vs_current_regret": -0.4312108080078246,
+      "value": {
+        "horizon": 0.5,
+        "receiver": "5942",
+        "receiver_target_id": "11",
+        "sequence_id": "2021_08_22_09_08_29",
+        "source": "5933"
+      }
+    },
+    {
+      "auc_ewma_for_harm": null,
+      "auc_latest_for_harm": null,
+      "group": "target",
+      "harm_rate_eps": 0.0,
+      "rows": 4,
+      "spearman_ewma_vs_current_peer_error": 0.39999999999999997,
+      "spearman_ewma_vs_current_regret": 0.39999999999999997,
+      "spearman_latest_vs_current_peer_error": 0.39999999999999997,
+      "spearman_latest_vs_current_regret": 0.39999999999999997,
+      "value": {
+        "horizon": 1.0,
+        "receiver": "5942",
+        "receiver_target_id": "11",
+        "sequence_id": "2021_08_22_09_08_29",
+        "source": "5933"
+      }
+    },
+    {
+      "auc_ewma_for_harm": null,
+      "auc_latest_for_harm": null,
+      "group": "target",
+      "harm_rate_eps": 0.0,
+      "rows": 3,
+      "spearman_ewma_vs_current_peer_error": 0.5,
+      "spearman_ewma_vs_current_regret": 0.5,
+      "spearman_latest_vs_current_peer_error": 0.5,
+      "spearman_latest_vs_current_regret": 0.5,
+      "value": {
+        "horizon": 0.1,
+        "receiver": "5942",
+        "receiver_target_id": "12",
+        "sequence_id": "2021_08_22_09_08_29",
+        "source": "5933"
+      }
+    },
+    {
+      "auc_ewma_for_harm": null,
+      "auc_latest_for_harm": null,
+      "group": "target",
+      "harm_rate_eps": 0.0,
+      "rows": 2,
+      "spearman_ewma_vs_current_peer_error": null,
+      "spearman_ewma_vs_current_regret": null,
+      "spearman_latest_vs_current_peer_error": null,
+      "spearman_latest_vs_current_regret": null,
+      "value": {
+        "horizon": 0.3,
+        "receiver": "5942",
+        "receiver_target_id": "12",
+        "sequence_id": "2021_08_22_09_08_29",
+        "source": "5933"
+      }
+    },
+    {
+      "auc_ewma_for_harm": null,
+      "auc_latest_for_harm": null,
+      "group": "target",
+      "harm_rate_eps": 1.0,
+      "rows": 6,
+      "spearman_ewma_vs_current_peer_error": 0.8857142857142858,
+      "spearman_ewma_vs_current_regret": 0.48571428571428577,
+      "spearman_latest_vs_current_peer_error": 0.7714285714285715,
+      "spearman_latest_vs_current_regret": 0.6,
+      "value": {
+        "horizon": 0.1,
+        "receiver": "5942",
+        "receiver_target_id": "2",
+        "sequence_id": "2021_08_22_09_08_29",
+        "source": "5933"
+      }
+    },
+    {
+      "auc_ewma_for_harm": null,
+      "auc_latest_for_harm": null,
+      "group": "target",
+      "harm_rate_eps": 1.0,
+      "rows": 4,
+      "spearman_ewma_vs_current_peer_error": -0.39999999999999997,
+      "spearman_ewma_vs_current_regret": -0.19999999999999998,
+      "spearman_latest_vs_current_peer_error": -0.19999999999999998,
+      "spearman_latest_vs_current_regret": -0.39999999999999997,
+      "value": {
+        "horizon": 0.3,
+        "receiver": "5942",
+        "receiver_target_id": "2",
+        "sequence_id": "2021_08_22_09_08_29",
+        "source": "5933"
+      }
+    },
+    {
+      "auc_ewma_for_harm": null,
+      "auc_latest_for_harm": null,
+      "group": "target",
+      "harm_rate_eps": 0.0,
+      "rows": 2,
+      "spearman_ewma_vs_current_peer_error": null,
+      "spearman_ewma_vs_current_regret": null,
+      "spearman_latest_vs_current_peer_error": null,
+      "spearman_latest_vs_current_regret": null,
+      "value": {
+        "horizon": 0.5,
+        "receiver": "5942",
+        "receiver_target_id": "2",
+        "sequence_id": "2021_08_22_09_08_29",
+        "source": "5933"
+      }
+    },
+    {
+      "auc_ewma_for_harm": null,
+      "auc_latest_for_harm": null,
+      "group": "target",
+      "harm_rate_eps": 1.0,
+      "rows": 6,
+      "spearman_ewma_vs_current_peer_error": 0.2571428571428572,
+      "spearman_ewma_vs_current_regret": 0.3714285714285715,
+      "spearman_latest_vs_current_peer_error": 0.14285714285714288,
+      "spearman_latest_vs_current_regret": -0.08571428571428573,
+      "value": {
+        "horizon": 0.1,
+        "receiver": "5942",
+        "receiver_target_id": "4",
+        "sequence_id": "2021_08_22_09_08_29",
+        "source": "5933"
+      }
+    },
+    {
+      "auc_ewma_for_harm": null,
+      "auc_latest_for_harm": null,
+      "group": "target",
+      "harm_rate_eps": 1.0,
+      "rows": 4,
+      "spearman_ewma_vs_current_peer_error": 0.0,
+      "spearman_ewma_vs_current_regret": 0.39999999999999997,
+      "spearman_latest_vs_current_peer_error": 0.0,
+      "spearman_latest_vs_current_regret": 0.39999999999999997,
+      "value": {
+        "horizon": 0.3,
+        "receiver": "5942",
+        "receiver_target_id": "4",
+        "sequence_id": "2021_08_22_09_08_29",
+        "source": "5933"
+      }
+    },
+    {
+      "auc_ewma_for_harm": null,
+      "auc_latest_for_harm": null,
+      "group": "target",
+      "harm_rate_eps": 0.0,
+      "rows": 2,
+      "spearman_ewma_vs_current_peer_error": null,
+      "spearman_ewma_vs_current_regret": null,
+      "spearman_latest_vs_current_peer_error": null,
+      "spearman_latest_vs_current_regret": null,
+      "value": {
+        "horizon": 0.5,
+        "receiver": "5942",
+        "receiver_target_id": "4",
+        "sequence_id": "2021_08_22_09_08_29",
+        "source": "5933"
+      }
+    },
+    {
+      "auc_ewma_for_harm": 0.7428571428571429,
+      "auc_latest_for_harm": 0.8285714285714286,
+      "group": "target",
+      "harm_rate_eps": 0.4166666666666667,
+      "rows": 12,
+      "spearman_ewma_vs_current_peer_error": 0.2027972027972028,
+      "spearman_ewma_vs_current_regret": 0.25874125874125875,
+      "spearman_latest_vs_current_peer_error": 0.6783216783216784,
+      "spearman_latest_vs_current_regret": 0.7342657342657343,
+      "value": {
+        "horizon": 0.1,
+        "receiver": "5942",
+        "receiver_target_id": "6",
+        "sequence_id": "2021_08_22_09_08_29",
+        "source": "5933"
+      }
+    },
+    {
+      "auc_ewma_for_harm": 0.625,
+      "auc_latest_for_harm": 0.9166666666666666,
+      "group": "target",
+      "harm_rate_eps": 0.6,
+      "rows": 10,
+      "spearman_ewma_vs_current_peer_error": 0.08536744066467457,
+      "spearman_ewma_vs_current_regret": -0.23171162466125958,
+      "spearman_latest_vs_current_peer_error": 0.439032551989755,
+      "spearman_latest_vs_current_regret": 0.45122790065613705,
+      "value": {
+        "horizon": 0.3,
+        "receiver": "5942",
+        "receiver_target_id": "6",
+        "sequence_id": "2021_08_22_09_08_29",
+        "source": "5933"
+      }
+    },
+    {
+      "auc_ewma_for_harm": 0.5833333333333334,
+      "auc_latest_for_harm": 0.8333333333333334,
+      "group": "target",
+      "harm_rate_eps": 0.75,
+      "rows": 8,
+      "spearman_ewma_vs_current_peer_error": 0.09820572322804728,
+      "spearman_ewma_vs_current_regret": -0.4419257545262127,
+      "spearman_latest_vs_current_peer_error": -0.02455143080701182,
+      "spearman_latest_vs_current_regret": 0.17186001564908276,
+      "value": {
+        "horizon": 0.5,
+        "receiver": "5942",
+        "receiver_target_id": "6",
+        "sequence_id": "2021_08_22_09_08_29",
+        "source": "5933"
+      }
+    },
+    {
+      "auc_ewma_for_harm": null,
+      "auc_latest_for_harm": null,
+      "group": "target",
+      "harm_rate_eps": 1.0,
+      "rows": 6,
+      "spearman_ewma_vs_current_peer_error": -0.21251185925162072,
+      "spearman_ewma_vs_current_regret": -0.4553825555391872,
+      "spearman_latest_vs_current_peer_error": -0.21251185925162072,
+      "spearman_latest_vs_current_regret": -0.4553825555391872,
+      "value": {
+        "horizon": 1.0,
+        "receiver": "5942",
+        "receiver_target_id": "6",
+        "sequence_id": "2021_08_22_09_08_29",
+        "source": "5933"
+      }
+    },
+    {
+      "auc_ewma_for_harm": null,
+      "auc_latest_for_harm": null,
+      "group": "target",
+      "harm_rate_eps": 1.0,
+      "rows": 4,
+      "spearman_ewma_vs_current_peer_error": null,
+      "spearman_ewma_vs_current_regret": null,
+      "spearman_latest_vs_current_peer_error": null,
+      "spearman_latest_vs_current_regret": null,
+      "value": {
+        "horizon": 2.0,
+        "receiver": "5942",
+        "receiver_target_id": "6",
+        "sequence_id": "2021_08_22_09_08_29",
+        "source": "5933"
+      }
+    },
+    {
+      "auc_ewma_for_harm": null,
+      "auc_latest_for_harm": null,
+      "group": "target",
+      "harm_rate_eps": 1.0,
+      "rows": 4,
+      "spearman_ewma_vs_current_peer_error": null,
+      "spearman_ewma_vs_current_regret": null,
+      "spearman_latest_vs_current_peer_error": null,
+      "spearman_latest_vs_current_regret": null,
+      "value": {
+        "horizon": 3.0,
+        "receiver": "5942",
+        "receiver_target_id": "6",
+        "sequence_id": "2021_08_22_09_08_29",
+        "source": "5933"
+      }
+    },
+    {
+      "auc_ewma_for_harm": 0.5,
+      "auc_latest_for_harm": 0.5,
+      "group": "target",
+      "harm_rate_eps": 0.5,
+      "rows": 2,
+      "spearman_ewma_vs_current_peer_error": null,
+      "spearman_ewma_vs_current_regret": null,
+      "spearman_latest_vs_current_peer_error": null,
+      "spearman_latest_vs_current_regret": null,
+      "value": {
+        "horizon": 5.0,
+        "receiver": "5942",
+        "receiver_target_id": "6",
+        "sequence_id": "2021_08_22_09_08_29",
+        "source": "5933"
+      }
+    }
+  ],
+  "thresholds": {
+    "harm_eps_m": 0.1,
+    "min_abs_spearman_regret": 0.1,
+    "min_auc_for_harm": 0.55,
+    "min_rows_per_group": 20
+  }
+}

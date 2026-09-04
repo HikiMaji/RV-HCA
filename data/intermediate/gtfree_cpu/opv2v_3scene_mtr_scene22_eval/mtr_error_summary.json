@@ -1,0 +1,73 @@
+{
+  "by_horizon": {
+    "0.1": {
+      "ego_only_error_mean_m": 0.8274830561686445,
+      "harm_rate_eps_0.1m": 0.521505376344086,
+      "peer_minus_ego_mean_m": 0.4189127498945346,
+      "peer_realized_error_mean_m": 1.246395806063179,
+      "rows": 186
+    },
+    "0.3": {
+      "ego_only_error_mean_m": 2.342567257230004,
+      "harm_rate_eps_0.1m": 0.5251396648044693,
+      "peer_minus_ego_mean_m": 0.1928056055293906,
+      "peer_realized_error_mean_m": 2.5353728627593943,
+      "rows": 179
+    },
+    "0.5": {
+      "ego_only_error_mean_m": 3.8926571871105566,
+      "harm_rate_eps_0.1m": 0.44047619047619047,
+      "peer_minus_ego_mean_m": 0.002232203047350807,
+      "peer_realized_error_mean_m": 3.8948893901579074,
+      "rows": 168
+    },
+    "1.0": {
+      "ego_only_error_mean_m": 7.970853326246663,
+      "harm_rate_eps_0.1m": 0.4391891891891892,
+      "peer_minus_ego_mean_m": -0.5328601886131406,
+      "peer_realized_error_mean_m": 7.437993137633523,
+      "rows": 148
+    },
+    "2.0": {
+      "ego_only_error_mean_m": 16.76210097443116,
+      "harm_rate_eps_0.1m": 0.5080645161290323,
+      "peer_minus_ego_mean_m": -1.5632149317752904,
+      "peer_realized_error_mean_m": 15.198886042655875,
+      "rows": 124
+    },
+    "3.0": {
+      "ego_only_error_mean_m": 26.118957953287072,
+      "harm_rate_eps_0.1m": 0.47619047619047616,
+      "peer_minus_ego_mean_m": -3.738725834866193,
+      "peer_realized_error_mean_m": 22.38023211842088,
+      "rows": 105
+    },
+    "5.0": {
+      "ego_only_error_mean_m": 44.71960012628204,
+      "harm_rate_eps_0.1m": 0.4065934065934066,
+      "peer_minus_ego_mean_m": -8.423735063976974,
+      "peer_realized_error_mean_m": 36.295865062305076,
+      "rows": 91
+    }
+  },
+  "error_definition": "3D Euclidean distance between receiver realized_state and selected-score MTR position_xyz",
+  "harm_definition": "peer_realized_error > ego_only_error + 0.1m",
+  "inference_contract": "realized_state comes from GT-free receiver tracker; this command reads no raw labels",
+  "input_rows": 49728,
+  "overall": {
+    "ego_only_error_mean_m": 11.286072731894997,
+    "harm_rate_eps_0.1m": 0.47952047952047955,
+    "peer_minus_ego_mean_m": -1.3177053725830536,
+    "peer_realized_error_mean_m": 9.968367359311944,
+    "rows": 1001
+  },
+  "rewritten_mtr_rows": 1001,
+  "same_rows_constant_velocity_probe": {
+    "ego_only_error_mean_m": 2.443784436956064,
+    "peer_minus_ego_mean_m": 0.4905176437235968,
+    "peer_realized_error_mean_m": 2.9343020806796605,
+    "rows": 1001
+  },
+  "status": "OK",
+  "valid_common_real_mtr_rows": 1001
+}

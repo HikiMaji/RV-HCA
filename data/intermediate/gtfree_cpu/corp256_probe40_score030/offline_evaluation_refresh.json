@@ -1,0 +1,139 @@
+{
+  "association": {
+    "association_precision": 1.0,
+    "association_recall": 0.45041322314049587,
+    "common_evaluable_events": 218,
+    "common_events": 338,
+    "conditional_association_recall": 1.0,
+    "conditional_opportunities": 218,
+    "correct_common_events": 218,
+    "end_to_end_association_recall": 0.45041322314049587,
+    "end_to_end_opportunities": 484,
+    "offline_common_candidate_denominator": 484,
+    "peer_track_misses_on_opportunity": 135,
+    "receiver_gt_unavailable_for_peer": 151,
+    "receiver_track_misses_on_opportunity": 142,
+    "shared_only_events": 301,
+    "shared_only_offline_hit_rate": 0.4053156146179402,
+    "shared_only_with_receiver_gt": 122
+  },
+  "association_gate_m": 3.0,
+  "ledger": {
+    "common_rows": 2366,
+    "horizon": {
+      "0.100": {
+        "coverage": 1.0,
+        "matured_valid_rows": 338,
+        "rows": 338
+      },
+      "0.300": {
+        "coverage": 0.9437869822485208,
+        "matured_valid_rows": 319,
+        "rows": 338
+      },
+      "0.500": {
+        "coverage": 0.8964497041420119,
+        "matured_valid_rows": 303,
+        "rows": 338
+      },
+      "1.000": {
+        "coverage": 0.8017751479289941,
+        "matured_valid_rows": 271,
+        "rows": 338
+      },
+      "2.000": {
+        "coverage": 0.5887573964497042,
+        "matured_valid_rows": 199,
+        "rows": 338
+      },
+      "3.000": {
+        "coverage": 0.3165680473372781,
+        "matured_valid_rows": 107,
+        "rows": 338
+      },
+      "5.000": {
+        "coverage": 0.0,
+        "matured_valid_rows": 0,
+        "rows": 338
+      }
+    },
+    "matured_valid_rows": 1537,
+    "row_hindsight_coverage": 0.6496196111580727
+  },
+  "raw_root": "/root/autodl-tmp/RV-HCA/data/raw/OPV2V/test",
+  "replay_dir": "data/intermediate/gtfree_cpu/corp256_probe40_score030",
+  "schema_version": "rvhca.offline_eval.v0",
+  "track_survival": {
+    "1.0s": {
+      "definition": "matched start row -> exact frame t+h; same_gt additionally preserves offline GT match",
+      "denominator_matched_start_rows": 412,
+      "horizon_s": 1.0,
+      "id_present_rate": 0.8883495145631068,
+      "same_gt_rows": 327,
+      "same_gt_survival_rate": 0.7936893203883495,
+      "same_local_id_rows": 366
+    },
+    "2.0s": {
+      "definition": "matched start row -> exact frame t+h; same_gt additionally preserves offline GT match",
+      "denominator_matched_start_rows": 302,
+      "horizon_s": 2.0,
+      "id_present_rate": 0.7748344370860927,
+      "same_gt_rows": 198,
+      "same_gt_survival_rate": 0.6556291390728477,
+      "same_local_id_rows": 234
+    },
+    "3.0s": {
+      "definition": "matched start row -> exact frame t+h; same_gt additionally preserves offline GT match",
+      "denominator_matched_start_rows": 166,
+      "horizon_s": 3.0,
+      "id_present_rate": 0.6506024096385542,
+      "same_gt_rows": 88,
+      "same_gt_survival_rate": 0.5301204819277109,
+      "same_local_id_rows": 108
+    },
+    "5.0s": {
+      "definition": "matched start row -> exact frame t+h; same_gt additionally preserves offline GT match",
+      "denominator_matched_start_rows": 0,
+      "horizon_s": 5.0,
+      "id_present_rate": null,
+      "same_gt_rows": 0,
+      "same_gt_survival_rate": null,
+      "same_local_id_rows": 0
+    }
+  },
+  "tracking": {
+    "gt_instances": 684,
+    "id_switches": 0,
+    "id_switches_per_100_matched_rows": 0.0,
+    "matched_gt_instances": 500,
+    "matched_track_rows": 500,
+    "track_persistence_mean": 1.0,
+    "track_persistence_median": 1.0,
+    "track_persistence_p10": 1.0,
+    "track_precision": 0.7824726134585289,
+    "track_recall": 0.7309941520467836,
+    "track_rows": 639
+  },
+  "trajectory": {
+    "aggregate": {
+      "ADE": null,
+      "FDE": null,
+      "rows": 0
+    },
+    "cmp_aggregate": null,
+    "ego_only": {
+      "ADE": 3.4685582055696194,
+      "FDE": 3.4685582055696194,
+      "rows": 1761
+    },
+    "harm_rate_definition": "aggregate_gt_error > ego_only_gt_error + 0.1m",
+    "model_counts": {},
+    "peer": {
+      "ADE": 3.611944053358126,
+      "FDE": 3.611944053358126,
+      "rows": 1761
+    },
+    "probe_aggregate_harm_rate_eps_0.1m": null,
+    "rows_used": 1761
+  }
+}

@@ -1,0 +1,221 @@
+{
+  "input": "vendor/CMP-upstream/preprocessed_data/opv2v/corpbevtlidar_delay_1_frame_aug_detection_result_for_tracking_test.pkl",
+  "mode": "cooperative_cmp_raw_sanitized",
+  "output": "data/intermediate/detections/opv2v_corpbevtlidar_delay_1_frame_aug_test_gtfree.pkl",
+  "scenes": {
+    "2021_08_18_19_48_05": {
+      "1045": {
+        "detections": 3165,
+        "frames": 178
+      },
+      "1054": {
+        "detections": 3069,
+        "frames": 178
+      }
+    },
+    "2021_08_20_21_10_24": {
+      "1996": {
+        "detections": 2732,
+        "frames": 98
+      },
+      "2005": {
+        "detections": 3235,
+        "frames": 98
+      },
+      "2014": {
+        "detections": 3271,
+        "frames": 98
+      }
+    },
+    "2021_08_21_09_28_12": {
+      "623": {
+        "detections": 1917,
+        "frames": 147
+      },
+      "632": {
+        "detections": 1805,
+        "frames": 147
+      },
+      "641": {
+        "detections": 1690,
+        "frames": 147
+      }
+    },
+    "2021_08_22_07_52_02": {
+      "3477": {
+        "detections": 4488,
+        "frames": 167
+      },
+      "3486": {
+        "detections": 3569,
+        "frames": 167
+      },
+      "3495": {
+        "detections": 3596,
+        "frames": 167
+      },
+      "3504": {
+        "detections": 3793,
+        "frames": 167
+      },
+      "3513": {
+        "detections": 4575,
+        "frames": 167
+      }
+    },
+    "2021_08_22_09_08_29": {
+      "5933": {
+        "detections": 1240,
+        "frames": 151
+      },
+      "5942": {
+        "detections": 1124,
+        "frames": 151
+      }
+    },
+    "2021_08_22_21_41_24": {
+      "886": {
+        "detections": 1176,
+        "frames": 71
+      },
+      "895": {
+        "detections": 1167,
+        "frames": 71
+      },
+      "904": {
+        "detections": 1183,
+        "frames": 71
+      }
+    },
+    "2021_08_23_12_58_19": {
+      "357": {
+        "detections": 2128,
+        "frames": 104
+      },
+      "366": {
+        "detections": 2050,
+        "frames": 104
+      }
+    },
+    "2021_08_23_15_19_19": {
+      "8690": {
+        "detections": 1438,
+        "frames": 167
+      },
+      "8699": {
+        "detections": 1729,
+        "frames": 167
+      }
+    },
+    "2021_08_23_16_06_26": {
+      "243": {
+        "detections": 1922,
+        "frames": 134
+      },
+      "252": {
+        "detections": 1666,
+        "frames": 134
+      },
+      "261": {
+        "detections": 2129,
+        "frames": 134
+      }
+    },
+    "2021_08_23_17_22_47": {
+      "574": {
+        "detections": 1946,
+        "frames": 102
+      },
+      "583": {
+        "detections": 2240,
+        "frames": 102
+      },
+      "592": {
+        "detections": 2230,
+        "frames": 102
+      }
+    },
+    "2021_08_23_21_07_10": {
+      "160": {
+        "detections": 2128,
+        "frames": 141
+      },
+      "169": {
+        "detections": 2290,
+        "frames": 141
+      },
+      "178": {
+        "detections": 2305,
+        "frames": 141
+      }
+    },
+    "2021_08_23_21_47_19": {
+      "225": {
+        "detections": 2596,
+        "frames": 77
+      },
+      "234": {
+        "detections": 2426,
+        "frames": 77
+      },
+      "243": {
+        "detections": 1923,
+        "frames": 77
+      }
+    },
+    "2021_08_24_07_45_41": {
+      "121": {
+        "detections": 3188,
+        "frames": 135
+      },
+      "130": {
+        "detections": 2621,
+        "frames": 135
+      },
+      "139": {
+        "detections": 3128,
+        "frames": 135
+      },
+      "148": {
+        "detections": 2823,
+        "frames": 135
+      }
+    },
+    "2021_08_24_11_37_54": {
+      "301": {
+        "detections": 706,
+        "frames": 104
+      },
+      "310": {
+        "detections": 778,
+        "frames": 104
+      },
+      "319": {
+        "detections": 811,
+        "frames": 104
+      }
+    },
+    "2021_08_24_20_09_18": {
+      "3174": {
+        "detections": 1334,
+        "frames": 220
+      },
+      "3183": {
+        "detections": 1230,
+        "frames": 220
+      }
+    },
+    "2021_08_24_20_49_54": {
+      "207": {
+        "detections": 1323,
+        "frames": 174
+      },
+      "216": {
+        "detections": 1301,
+        "frames": 174
+      }
+    }
+  },
+  "schema_version": "rvhca.detection.v0",
+  "source_model": "corpbevtlidar_delay_1_frame_aug"
+}

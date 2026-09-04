@@ -1,0 +1,6 @@
+{
+  "input_rows": 49728,
+  "mtr_rows": 0,
+  "reason": "ledger contains no valid common rows whose forecast.model identifies a real MTR/CMP prediction",
+  "status": "BLOCKED_NO_REAL_MTR"
+}

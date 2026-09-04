@@ -1,0 +1,72 @@
+# Local environments and Python build products
+.venv/
+venv/
+env/
+__pycache__/
+*.py[cod]
+*.so
+*.o
+*.a
+*.dylib
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Editor and local runtime state
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Raw datasets, temporary downloads, and generated binary artifacts
+data/raw/
+data/tmp/
+data/assets/checkpoints/
+data/assets/preprocessed_data/
+data/intermediate/**/*.jsonl
+data/intermediate/**/*.pkl
+data/intermediate/**/*.pickle
+data/intermediate/**/*.npy
+data/intermediate/**/*.npz
+data/intermediate/**/*.pt
+data/intermediate/**/*.pth
+data/intermediate/**/*.bin
+data/intermediate/**/*.parquet
+data/intermediate/**/*.h5
+data/intermediate/**/*.hdf5
+*.pth
+*.pt
+*.ckpt
+*.safetensors
+*.bin
+*.pkl
+*.pickle
+*.npy
+*.npz
+*.parquet
+*.h5
+*.hdf5
+*.tar
+*.tar.gz
+*.tgz
+*.zip
+*.7z
+
+# The full upstream checkout is excluded; the small project-side CMP snapshot
+# is retained for code review.
+vendor/CMP-upstream/
+vendor/CMP/**/__pycache__/
+
+# Downloaded paper binaries/text are not redistributed in this repository.
+docs/papers/*.pdf
+docs/papers/*.txt
+
+# Secrets and local credentials
+.env
+.env.*
+*.pem
+*.key
+*credentials*
+*secret*
+*token*

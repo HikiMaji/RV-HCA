@@ -1,0 +1,32 @@
+{
+  "ewma": {
+    "baseline": "EWMA",
+    "mean_ego_error": 1.4462500744105913,
+    "mean_gain_vs_ego": -0.013897282348054762,
+    "mean_peer_error": 1.7895400779056025,
+    "mean_selected_error": 1.460147356758646,
+    "peer_enabled_rate": 0.1442495126705653,
+    "rows": 2366,
+    "usable_rows": 1539
+  },
+  "metadata_only": {
+    "baseline": "metadata-only",
+    "mean_ego_error": 1.446250074410594,
+    "mean_gain_vs_ego": -0.3050430455948634,
+    "mean_peer_error": 1.7895400779055977,
+    "mean_selected_error": 1.7512931200054573,
+    "peer_enabled_rate": 0.9928525016244314,
+    "rows": 2366,
+    "usable_rows": 1539
+  },
+  "recent_error": {
+    "baseline": "recent-error",
+    "mean_ego_error": 1.4462500744105913,
+    "mean_gain_vs_ego": -0.016272249309975173,
+    "mean_peer_error": 1.7895400779056025,
+    "mean_selected_error": 1.4625223237205665,
+    "peer_enabled_rate": 0.1728395061728395,
+    "rows": 2366,
+    "usable_rows": 1539
+  }
+}

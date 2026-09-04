@@ -1,0 +1,251 @@
+{
+  "by_horizon": {
+    "0.1": {
+      "ego_only_error_mean_m": 0.9286827743904059,
+      "harm_rate_eps_0.1m": 0.40882669537136707,
+      "peer_minus_ego_mean_m": 0.050008878253707874,
+      "peer_realized_error_mean_m": 0.9786916526441137,
+      "rows": 4645
+    },
+    "0.3": {
+      "ego_only_error_mean_m": 2.671613413659268,
+      "harm_rate_eps_0.1m": 0.4477916194790487,
+      "peer_minus_ego_mean_m": 0.0492256177188838,
+      "peer_realized_error_mean_m": 2.720839031378152,
+      "rows": 4415
+    },
+    "0.5": {
+      "ego_only_error_mean_m": 4.406575174219924,
+      "harm_rate_eps_0.1m": 0.4620493358633776,
+      "peer_minus_ego_mean_m": 0.07504000281003662,
+      "peer_realized_error_mean_m": 4.481615177029961,
+      "rows": 4216
+    },
+    "1.0": {
+      "ego_only_error_mean_m": 8.911218528684858,
+      "harm_rate_eps_0.1m": 0.4908122503328895,
+      "peer_minus_ego_mean_m": 0.19077371625863976,
+      "peer_realized_error_mean_m": 9.101992244943496,
+      "rows": 3755
+    },
+    "2.0": {
+      "ego_only_error_mean_m": 18.647421599518285,
+      "harm_rate_eps_0.1m": 0.500503524672709,
+      "peer_minus_ego_mean_m": 0.3629715887368434,
+      "peer_realized_error_mean_m": 19.01039318825513,
+      "rows": 2979
+    },
+    "3.0": {
+      "ego_only_error_mean_m": 29.438271805020165,
+      "harm_rate_eps_0.1m": 0.5202411714039621,
+      "peer_minus_ego_mean_m": 0.7989585422137094,
+      "peer_realized_error_mean_m": 30.237230347233872,
+      "rows": 2322
+    },
+    "5.0": {
+      "ego_only_error_mean_m": 53.692064751422684,
+      "harm_rate_eps_0.1m": 0.5155520995334371,
+      "peer_minus_ego_mean_m": 1.1990782284003125,
+      "peer_realized_error_mean_m": 54.891142979823,
+      "rows": 1286
+    }
+  },
+  "by_scene": {
+    "2021_08_18_19_48_05": {
+      "ego_only_error_mean_m": 13.69555209666543,
+      "harm_rate_eps_0.1m": 0.4682799215173316,
+      "peer_minus_ego_mean_m": 0.2688574974034117,
+      "peer_realized_error_mean_m": 13.964409594068844,
+      "rows": 3058
+    },
+    "2021_08_20_21_10_24": {
+      "ego_only_error_mean_m": 10.630636814172172,
+      "harm_rate_eps_0.1m": 0.466128125159773,
+      "peer_minus_ego_mean_m": 0.33016472460768687,
+      "peer_realized_error_mean_m": 10.96080153877986,
+      "rows": 19559
+    },
+    "2021_08_22_09_08_29": {
+      "ego_only_error_mean_m": 11.286072731894997,
+      "harm_rate_eps_0.1m": 0.47952047952047955,
+      "peer_minus_ego_mean_m": -1.3177053725830536,
+      "peer_realized_error_mean_m": 9.968367359311944,
+      "rows": 1001
+    }
+  },
+  "by_scene_horizon": {
+    "2021_08_18_19_48_05": {
+      "0.1": {
+        "ego_only_error_mean_m": 1.0373115296028268,
+        "harm_rate_eps_0.1m": 0.42244224422442245,
+        "peer_minus_ego_mean_m": 0.05737396229101265,
+        "peer_realized_error_mean_m": 1.0946854918938398,
+        "rows": 606
+      },
+      "0.3": {
+        "ego_only_error_mean_m": 3.0413661981601097,
+        "harm_rate_eps_0.1m": 0.4354561101549053,
+        "peer_minus_ego_mean_m": 0.03820877581382077,
+        "peer_realized_error_mean_m": 3.0795749739739304,
+        "rows": 581
+      },
+      "0.5": {
+        "ego_only_error_mean_m": 5.0822235339926,
+        "harm_rate_eps_0.1m": 0.44584837545126355,
+        "peer_minus_ego_mean_m": 0.07530087912996096,
+        "peer_realized_error_mean_m": 5.1575244131225615,
+        "rows": 554
+      },
+      "1.0": {
+        "ego_only_error_mean_m": 10.604087652487122,
+        "harm_rate_eps_0.1m": 0.4757085020242915,
+        "peer_minus_ego_mean_m": 0.15379682019122767,
+        "peer_realized_error_mean_m": 10.757884472678347,
+        "rows": 494
+      },
+      "2.0": {
+        "ego_only_error_mean_m": 23.20321551231652,
+        "harm_rate_eps_0.1m": 0.49318801089918257,
+        "peer_minus_ego_mean_m": 0.2461175927504406,
+        "peer_realized_error_mean_m": 23.449333105066952,
+        "rows": 367
+      },
+      "3.0": {
+        "ego_only_error_mean_m": 38.07806912189188,
+        "harm_rate_eps_0.1m": 0.5613382899628253,
+        "peer_minus_ego_mean_m": 0.16534160222546412,
+        "peer_realized_error_mean_m": 38.243410724117346,
+        "rows": 269
+      },
+      "5.0": {
+        "ego_only_error_mean_m": 67.76899432386598,
+        "harm_rate_eps_0.1m": 0.5828877005347594,
+        "peer_minus_ego_mean_m": 2.7417323177161657,
+        "peer_realized_error_mean_m": 70.51072664158215,
+        "rows": 187
+      }
+    },
+    "2021_08_20_21_10_24": {
+      "0.1": {
+        "ego_only_error_mean_m": 0.9164829617588254,
+        "harm_rate_eps_0.1m": 0.40124578250713727,
+        "peer_minus_ego_mean_m": 0.031042005413894635,
+        "peer_realized_error_mean_m": 0.94752496717272,
+        "rows": 3853
+      },
+      "0.3": {
+        "ego_only_error_mean_m": 2.628952098804507,
+        "harm_rate_eps_0.1m": 0.44596443228454175,
+        "peer_minus_ego_mean_m": 0.04394517102360634,
+        "peer_realized_error_mean_m": 2.672897269828113,
+        "rows": 3655
+      },
+      "0.5": {
+        "ego_only_error_mean_m": 4.324156465153041,
+        "harm_rate_eps_0.1m": 0.4656554092730395,
+        "peer_minus_ego_mean_m": 0.07849941462425905,
+        "peer_realized_error_mean_m": 4.4026558797773,
+        "rows": 3494
+      },
+      "1.0": {
+        "ego_only_error_mean_m": 8.687285571024251,
+        "harm_rate_eps_0.1m": 0.49566334725345323,
+        "peer_minus_ego_mean_m": 0.23104496732780935,
+        "peer_realized_error_mean_m": 8.91833053835206,
+        "rows": 3113
+      },
+      "2.0": {
+        "ego_only_error_mean_m": 18.06936830028752,
+        "harm_rate_eps_0.1m": 0.5012057877813505,
+        "peer_minus_ego_mean_m": 0.4762081422217768,
+        "peer_realized_error_mean_m": 18.545576442509294,
+        "rows": 2488
+      },
+      "3.0": {
+        "ego_only_error_mean_m": 28.424114965283756,
+        "harm_rate_eps_0.1m": 0.5169404517453798,
+        "peer_minus_ego_mean_m": 1.1310426369006845,
+        "peer_realized_error_mean_m": 29.55515760218444,
+        "rows": 1948
+      },
+      "5.0": {
+        "ego_only_error_mean_m": 51.890585039955326,
+        "harm_rate_eps_0.1m": 0.5128968253968254,
+        "peer_minus_ego_mean_m": 1.7816176082656583,
+        "peer_realized_error_mean_m": 53.67220264822099,
+        "rows": 1008
+      }
+    },
+    "2021_08_22_09_08_29": {
+      "0.1": {
+        "ego_only_error_mean_m": 0.8274830561686445,
+        "harm_rate_eps_0.1m": 0.521505376344086,
+        "peer_minus_ego_mean_m": 0.4189127498945346,
+        "peer_realized_error_mean_m": 1.246395806063179,
+        "rows": 186
+      },
+      "0.3": {
+        "ego_only_error_mean_m": 2.342567257230004,
+        "harm_rate_eps_0.1m": 0.5251396648044693,
+        "peer_minus_ego_mean_m": 0.1928056055293906,
+        "peer_realized_error_mean_m": 2.5353728627593943,
+        "rows": 179
+      },
+      "0.5": {
+        "ego_only_error_mean_m": 3.8926571871105566,
+        "harm_rate_eps_0.1m": 0.44047619047619047,
+        "peer_minus_ego_mean_m": 0.002232203047350807,
+        "peer_realized_error_mean_m": 3.8948893901579074,
+        "rows": 168
+      },
+      "1.0": {
+        "ego_only_error_mean_m": 7.970853326246663,
+        "harm_rate_eps_0.1m": 0.4391891891891892,
+        "peer_minus_ego_mean_m": -0.5328601886131406,
+        "peer_realized_error_mean_m": 7.437993137633523,
+        "rows": 148
+      },
+      "2.0": {
+        "ego_only_error_mean_m": 16.76210097443116,
+        "harm_rate_eps_0.1m": 0.5080645161290323,
+        "peer_minus_ego_mean_m": -1.5632149317752904,
+        "peer_realized_error_mean_m": 15.198886042655875,
+        "rows": 124
+      },
+      "3.0": {
+        "ego_only_error_mean_m": 26.118957953287072,
+        "harm_rate_eps_0.1m": 0.47619047619047616,
+        "peer_minus_ego_mean_m": -3.738725834866193,
+        "peer_realized_error_mean_m": 22.38023211842088,
+        "rows": 105
+      },
+      "5.0": {
+        "ego_only_error_mean_m": 44.71960012628204,
+        "harm_rate_eps_0.1m": 0.4065934065934066,
+        "peer_minus_ego_mean_m": -8.423735063976974,
+        "peer_realized_error_mean_m": 36.295865062305076,
+        "rows": 91
+      }
+    }
+  },
+  "error_definition": "3D Euclidean distance between receiver realized_state and selected-score MTR position_xyz",
+  "harm_definition": "peer_realized_error > ego_only_error + 0.1m",
+  "inference_contract": "realized_state comes from GT-free receiver tracker; this command reads no raw labels",
+  "input_rows": 49728,
+  "overall": {
+    "ego_only_error_mean_m": 11.055253728707905,
+    "harm_rate_eps_0.1m": 0.4669743416038615,
+    "peer_minus_ego_mean_m": 0.2523852569102271,
+    "peer_realized_error_mean_m": 11.307638985618132,
+    "rows": 23618
+  },
+  "rewritten_mtr_rows": 23618,
+  "same_rows_constant_velocity_probe": {
+    "ego_only_error_mean_m": 1.6461120200220942,
+    "peer_minus_ego_mean_m": 0.1708712844797365,
+    "peer_realized_error_mean_m": 1.8169833045018309,
+    "rows": 23618
+  },
+  "status": "OK",
+  "valid_common_real_mtr_rows": 23618
+}

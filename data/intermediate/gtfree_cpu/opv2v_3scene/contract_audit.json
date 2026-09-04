@@ -1,0 +1,39 @@
+{
+  "checks": {
+    "association": {
+      "duplicate_ledger_keys": 0,
+      "forbidden_or_temporal_violations": [],
+      "missing_required_fields": [],
+      "pass": true,
+      "path": "data/intermediate/gtfree_cpu/opv2v_3scene/association_events.jsonl",
+      "rows": 18747
+    },
+    "ledger": {
+      "duplicate_ledger_keys": 0,
+      "forbidden_or_temporal_violations": [],
+      "missing_required_fields": [],
+      "pass": true,
+      "path": "data/intermediate/gtfree_cpu/opv2v_3scene/prediction_ledger.jsonl",
+      "rows": 49728
+    },
+    "mtr_manifest": {
+      "duplicate_ledger_keys": 0,
+      "forbidden_or_temporal_violations": [],
+      "missing_required_fields": [],
+      "pass": true,
+      "path": "data/intermediate/gtfree_cpu/opv2v_3scene/gtfree_mtr_input_manifest_fullhistory.jsonl",
+      "rows": 166149
+    },
+    "tracks": {
+      "duplicate_ledger_keys": 0,
+      "forbidden_or_temporal_violations": [],
+      "missing_required_fields": [],
+      "pass": true,
+      "path": "data/intermediate/gtfree_cpu/opv2v_3scene/local_tracks.jsonl",
+      "rows": 12260
+    }
+  },
+  "pass": true,
+  "raw_labels_read": false,
+  "schema_version": "rvhca.gtfree_contract_audit.v0"
+}

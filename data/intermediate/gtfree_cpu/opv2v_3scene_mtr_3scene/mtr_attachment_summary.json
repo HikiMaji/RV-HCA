@@ -1,0 +1,15 @@
+{
+  "aggregate_attached_rows": 0,
+  "aggregate_ledger_rows_with_match": 0,
+  "aggregate_record_keys": 0,
+  "ego_attached_rows": 38248,
+  "ledger_rows": 49728,
+  "merge_mode": "streaming_ledger_compact_prediction_index",
+  "normalized_records": 19166,
+  "peer_attached_rows": 38101,
+  "peer_ledger_rows_with_match": 38101,
+  "peer_record_keys": 9583,
+  "schema_version": "rvhca.mtr_prediction.v0",
+  "unmatched_ego_keys": 5202,
+  "unmatched_peer_keys": 5246
+}
