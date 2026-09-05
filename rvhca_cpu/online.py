@@ -554,6 +554,7 @@ def build_replay(
     target_assignments: Dict[Tuple[str, str, int, int], int] = {}
     target_metadata: Dict[Tuple[str, str, int, int], Dict[str, int]] = {}
     observations_by_target: Dict[Tuple[str, str, int, int], TrackRow] = {}
+    receiver_target_states: List[Dict[str, Any]] = []
     association_events: List[Dict[str, Any]] = []
     ledger: List[Dict[str, Any]] = []
 
@@ -584,10 +585,33 @@ def build_replay(
                     target_assignments[(sequence_id, receiver, frame_idx, row.local_track_id)] = target_id
                     observations_by_target[(sequence_id, receiver, frame_idx, target_id)] = row
                     state = managers[receiver].active.get(target_id, {})
-                    target_metadata[(sequence_id, receiver, frame_idx, target_id)] = {
+                    metadata = {
                         "track_age": int(state.get("age", 1)),
                         "miss_count": int(state.get("miss_count", 0)),
                     }
+                    target_metadata[(sequence_id, receiver, frame_idx, target_id)] = metadata
+                    # Persist every causal receiver observation, rather than
+                    # only targets that later participate in a peer packet.
+                    # This receiver_target_id is the sole temporal identity
+                    # bridge for send, arrival, and hindsight lookup.
+                    receiver_target_states.append(
+                        {
+                            "schema_version": "rvhca.receiver_target_state.v1",
+                            "sequence_id": sequence_id,
+                            "receiver": receiver,
+                            "frame_idx": frame_idx,
+                            "timestamp_key": str(row.timestamp_key),
+                            "receiver_local_track_id": int(row.local_track_id),
+                            "receiver_target_id": int(target_id),
+                            "center_world": list(row.center_world),
+                            "velocity_world": list(row.velocity_world),
+                            "pose": list(row.pose),
+                            "track_age": metadata["track_age"],
+                            "miss_count": metadata["miss_count"],
+                            "tracking_frame": "world_fixed",
+                            "uses_gt": False,
+                        }
+                    )
 
         # Cross-source association occurs when a peer packet arrives.  The
         # peer state is issued at ``send_frame_idx`` and propagated to the
@@ -766,6 +790,10 @@ def build_replay(
                             ledger.append(row)
 
     summary = summarize_replay(all_tracks, association_events, ledger, tracking_failures)
+    summary["receiver_target_state_rows"] = len(receiver_target_states)
+    summary["receiver_target_state_coverage"] = (
+        float(len(receiver_target_states) / len(all_tracks)) if all_tracks else 0.0
+    )
     return {
         "schema_version": "rvhca.cpu_replay.v1",
         "config": {
@@ -783,6 +811,7 @@ def build_replay(
             "detector_cache_path": detector_cache_path,
         },
         "tracks": [row.as_dict() for row in all_tracks],
+        "receiver_target_states": receiver_target_states,
         "association_events": association_events,
         "ledger": ledger,
         "summary": summary,
@@ -850,6 +879,7 @@ def write_replay(output_dir: Path, replay: Mapping[str, Any]) -> None:
     output_dir.mkdir(parents=True, exist_ok=True)
     for name, key in (
         ("local_tracks.jsonl", "tracks"),
+        ("receiver_target_states.jsonl", "receiver_target_states"),
         ("association_events.jsonl", "association_events"),
         ("prediction_ledger.jsonl", "ledger"),
     ):

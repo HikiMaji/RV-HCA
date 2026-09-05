@@ -77,6 +77,50 @@ PYTHONPATH=$PWD /root/autodl-tmp/RV-HCA/.venv/bin/python \
 使用 `run_gtfree_mtr.py --role peer` / `--role ego` 导出，只有共享且兼容的 paired
 replay 才能使用 `--role both`。不兼容输入会被 strict audit 拒绝。
 
+## Cross-replay canonical pairing（GT-free）
+
+PointPillar fixed-world replay 是 canonical receiver state stream；CoBEVT 和
+PointPillar 的 AB3DMOT ID 绝不直接 join。先在 packet arrival 做一次 CoBEVT
+track 到 PointPillar canonical target 的几何匹配，随后 send 与 future 都只以同一
+`receiver_target_id` 查询。旧的 `prediction_ledger.jsonl` 不作为 paired row 的
+生成来源，因为它只保存既有 peer association 的子集，不能恢复完整 canonical
+continuity。
+
+先分别生成新的 fixed-world replay。PointPillar canonical replay 必须有
+`receiver_target_states.jsonl`；两者都必须声明 `tracking_frame=world_fixed`（旧
+`rvhca.cpu_replay.v0` 输出不满足此条件），然后：
+
+```bash
+PYTHONPATH=$PWD /root/autodl-tmp/RV-HCA/.venv/bin/python \
+  scripts/build_cross_replay_pairing.py \
+  /path/to/pointpillar_worldfixed_replay \
+  /path/to/cobevt_worldfixed_replay
+
+# 只在离线 audit 读取 raw OPV2V labels；不写回任何 online artifact。
+PYTHONPATH=$PWD /root/autodl-tmp/RV-HCA/.venv/bin/python \
+  scripts/evaluate_cross_replay_pairing.py \
+  /path/to/pointpillar_worldfixed_replay \
+  /path/to/cobevt_worldfixed_replay \
+  /path/to/pointpillar_worldfixed_replay/cross_replay_pairing.jsonl \
+  /path/to/OPV2V/test
+```
+
+当两个 standalone MTR export 都带完整且 `PASS` 的 provenance 后，构造 scientific
+paired ledger：
+
+```bash
+PYTHONPATH=$PWD /root/autodl-tmp/RV-HCA/.venv/bin/python \
+  scripts/build_paired_mtr_ledger.py \
+  /path/to/pointpillar_worldfixed_replay \
+  /path/to/cross_replay_pairing.jsonl \
+  /path/to/cobevt_peer_mtr_predictions.jsonl \
+  /path/to/pointpillar_ego_mtr_predictions.jsonl
+```
+
+该命令对 `input_distribution_status != PASS`、history/checkpoint family 不一致、
+或 peer ID 未随其 replay 一致重编号的记录 fail-closed；不计算 Harm Rate，也不训练
+reliability controller。
+
 ## 审查入口
 
 建议先阅读 [`docs/rv_hca_core_scientific_check.md`](docs/rv_hca_core_scientific_check.md) 和 [`docs/mtr_integration_status.md`](docs/mtr_integration_status.md)，再查看 `data/intermediate/gtfree_cpu/opv2v_3scene_mtr_3scene_eval/` 下的 JSON 摘要。完整 ledger 和原始输入留在本地，不属于 GitHub 快照。

@@ -249,6 +249,20 @@ def normalize_prediction_record(record: Mapping[str, Any]) -> Dict[str, Any]:
         if len(pose) != 6:
             raise MTRContractError("source_pose_at_send must have six values")
         normalized["source_pose_at_send"] = pose.tolist()
+    # Keep export provenance intact.  It is optional here so legacy smoke
+    # records remain readable; the scientific cross-replay paired ledger
+    # enforces the complete PASS contract at its own trust boundary.
+    for field in ("track_history_family", "checkpoint_history_family", "history_reference_frame"):
+        if field in record:
+            value = str(record[field])
+            if not value:
+                raise MTRContractError("%s must be non-empty" % field)
+            normalized[field] = value
+    if "input_distribution_status" in record:
+        status = str(record["input_distribution_status"])
+        if status not in {"PASS", "MISMATCH"}:
+            raise MTRContractError("input_distribution_status must be PASS or MISMATCH")
+        normalized["input_distribution_status"] = status
     return normalized
 
 

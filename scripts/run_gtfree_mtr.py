@@ -289,7 +289,13 @@ def _swap_weights(model: torch.nn.Module, checkpoint: Path) -> None:
     torch.cuda.empty_cache()
 
 
-def _records_for_group(model: torch.nn.Module, group: Mapping[str, Any], role: str, model_name: str) -> List[Dict[str, Any]]:
+def _records_for_group(
+    model: torch.nn.Module,
+    group: Mapping[str, Any],
+    role: str,
+    model_name: str,
+    provenance: Mapping[str, Any],
+) -> List[Dict[str, Any]]:
     with torch.inference_mode():
         output = model(_make_batch(group))
     pred_xy = output["pred_trajs"][:, :, :, :2]
@@ -335,6 +341,9 @@ def _records_for_group(model: torch.nn.Module, group: Mapping[str, Any], role: s
                 "source_pose_at_send": list(group["source_pose"]),
                 "model": model_name,
                 "history_reference_frame": str(group.get("history_reference_frame", "world")),
+                "track_history_family": str(provenance["track_history_family"]),
+                "checkpoint_history_family": str(provenance["checkpoint_history_family"]),
+                "input_distribution_status": str(provenance["input_distribution_status"]),
                 "uses_gt": False,
             }
         )
@@ -403,6 +412,16 @@ def main() -> None:
             "refusing MTR inference with an unverified checkpoint/history distribution; "
             "use a compatible GT-free track replay or --allow-input-mismatch for a non-scientific smoke test"
         )
+    peer_provenance = {
+        "track_history_family": input_audit["track_history_family"],
+        "checkpoint_history_family": input_audit["peer_history_family"],
+        "input_distribution_status": input_audit["status"],
+    }
+    ego_provenance = {
+        "track_history_family": input_audit["track_history_family"],
+        "checkpoint_history_family": input_audit["ego_history_family"],
+        "input_distribution_status": input_audit["status"],
+    }
     output.parent.mkdir(parents=True, exist_ok=True)
     with output.with_suffix(output.suffix + ".input_audit.json").open("w", encoding="utf-8") as audit_handle:
         json.dump(input_audit, audit_handle, ensure_ascii=False, indent=2, sort_keys=True)
@@ -465,7 +484,9 @@ def main() -> None:
     with partial.open("w", encoding="utf-8") as handle:
         if args.role in {"both", "peer"}:
             for index, group in enumerate(groups, start=1):
-                for record in _records_for_group(model, group, "peer", "cmp_mtr_no_agg"):
+                for record in _records_for_group(
+                    model, group, "peer", "cmp_mtr_no_agg", peer_provenance
+                ):
                     handle.write(json.dumps(record, ensure_ascii=False, separators=(",", ":")) + "\n")
                     written += 1
                 if index == 1 or index % 10 == 0 or index == len(groups):
@@ -479,7 +500,9 @@ def main() -> None:
             _swap_weights(model, args.ego_checkpoint)
         if args.role in {"both", "ego"}:
             for index, group in enumerate(groups, start=1):
-                for record in _records_for_group(model, group, "ego", "cmp_mtr_no_coop"):
+                for record in _records_for_group(
+                    model, group, "ego", "cmp_mtr_no_coop", ego_provenance
+                ):
                     handle.write(json.dumps(record, ensure_ascii=False, separators=(",", ":")) + "\n")
                     written += 1
                 if index == 1 or index % 10 == 0 or index == len(groups):
